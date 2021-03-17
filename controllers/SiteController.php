@@ -133,6 +133,7 @@ class SiteController extends Controller
 //        return var_dump($user_requests);
         $requests = [];
         foreach ($user_requests as $key => $value) {
+            $requests[$key]['id'] = $value->id;
             $requests[$key]['title'] = $value->title;
             $requests[$key]['description'] = $value->description;
             $requests[$key]['date'] = $value->date;
@@ -185,6 +186,16 @@ class SiteController extends Controller
         return $this->render('create-request', [
             'model' => $model,
         ]);
+    }
+
+    public function actionDeleteRequest()
+    {
+        if (Yii::$app->user->isGuest) {
+            return $this->goHome();
+        }
+        $post = Yii::$app->request->post();
+        Requests::find()->where(['id' => $post['id']])->one()->delete();
+        return 'Удаленно';
     }
 
     public function actionAbout()

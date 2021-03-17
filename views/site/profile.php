@@ -5,10 +5,12 @@
 
 /* @var $model app\models\LoginForm */
 
+use app\assets\ProfileAsset;
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 
 $this->title = 'Profile';
+ProfileAsset::register($this);
 ?>
 <div class="site-login">
     <h1><?= $fio ?></h1>
@@ -24,7 +26,7 @@ $this->title = 'Profile';
 
     <? foreach ($requests as $key => $value) : ?>
         <div>
-            <div>
+            <div id="title">
                 <?= $value['title'] ?>
             </div>
             <div>
@@ -35,6 +37,9 @@ $this->title = 'Profile';
             </div>
             <div>
                 <img src="data:image/png;base64,<?= $value['img'] ?>">
+            </div>
+            <div>
+                <button class="del" value="<?= $value['id'] ?>">Удалить</button>
             </div>
         </div>
     <? endforeach; ?>

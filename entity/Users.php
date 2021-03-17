@@ -13,6 +13,7 @@ use yii\db\ActiveRecord;
  * @property string username
  * @property string email
  * @property string password
+ * @property int is_admin
  * @package app\entity
  */
 class Users extends ActiveRecord
