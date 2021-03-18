@@ -136,14 +136,14 @@ class SiteController extends Controller
             $requests[$key]['id'] = $value->id;
             $requests[$key]['title'] = $value->title;
             $requests[$key]['description'] = $value->description;
-            $requests[$key]['date'] = $value->date;
+            $requests[$key]['date'] = date('d.m.Y',strtotime($value->date));
             $requests[$key]['img'] = Files::find()->where(['id' => $value->before_img_id])->one()->file_content;
         }
-
         return $this->render('profile', [
             'fio' => implode(' ', $fio),
             'email' => $user->email,
             'requests' => $requests,
+            'first_letter'=> mb_substr($fio[0],0,1).mb_substr($fio[1],0,1),
         ]);
     }
 
