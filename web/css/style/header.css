@@ -1,0 +1,41 @@
+.header {
+    border-radius: 0;
+    background: #3a3259;
+}
+
+.ul {
+    float: right;
+    display: flex;
+    font-size: 18px;
+}
+
+.ul > li {
+    list-style: none;
+    margin: 0 10px;
+    padding: 0;
+}
+
+.ul > li > a {
+    padding: 0;
+}
+.ul > li > a:hover {
+    background-color: rgba(0,0,0,0);
+}
+
+.home {
+    font-size: 20px;
+}
+
+.header a {
+    color: #00e0d0;
+}
+
+.ul li a {
+    margin-top: 12px;
+    transition: .2s color;
+}
+
+.ul li a:hover {
+    color: #93dfda;
+    border-bottom: 1px solid #00e0d0;
+}
