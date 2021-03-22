@@ -9,4 +9,7 @@ class IndexAsset extends AppAsset
     public $css = [
         'css/style/main.css',
     ];
+    public $js = [
+        'js/counter.js'
+    ];
 }

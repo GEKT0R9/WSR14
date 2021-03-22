@@ -36,30 +36,35 @@ AppAsset::register($this);
             'class' => 'header',
         ],
     ]);
+    $items = [
+        Yii::$app->user->isGuest ? (
+        ['label' => 'Авторизация', 'url' => ['/site/login']]
+        ) : (
+        ['label' => 'Профиль', 'url' => ['/site/profile']]
+        )
+    ];
+    if (Yii::$app->user->identity->is_admin == 1) {
+        $items[] = ['label' => 'Статусы', 'url' => ['/site/directory', 'type' => 'status']];
+        $items[] = ['label' => 'Критерии', 'url' => ['/site/directory', 'type' => 'criterion']];
+    }
     echo Nav::widget([
         'options' => ['class' => 'ul'],
-        'items' => [
-            Yii::$app->user->isGuest ? (
-                ['label' => 'Авторизация', 'url' => ['/site/login']]
-            ) : (
-                ['label' => 'Профиль', 'url' => ['/site/profile']]
-            )
-        ],
+        'items' => $items,
     ]);
     NavBar::end();
     ?>
 
 
-        <?= Breadcrumbs::widget([
-            'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
-        ]) ?>
-        <?= Alert::widget() ?>
-        <?= $content ?>
+    <?= Breadcrumbs::widget([
+        'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
+    ]) ?>
+    <?= Alert::widget() ?>
+    <?= $content ?>
 
 </div>
 
 <footer>
-        <p>2021 год, NoFantasy/2 все права защищены©</p>
+    <p>2021 год, NoFantasy/2 все права защищены©</p>
 </footer>
 
 <?php $this->endBody() ?>

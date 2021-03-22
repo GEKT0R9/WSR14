@@ -8,6 +8,7 @@
 use app\assets\ProfileAsset;
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
+use yii\widgets\LinkPager;
 
 $this->title = 'Profile';
 ProfileAsset::register($this);
@@ -22,7 +23,6 @@ ProfileAsset::register($this);
         </div>
         <h3 class="fio"><?= $fio ?></h3>
         <p class="mail"><?= $email ?></p>
-<!--        <a href="" class="exit">выход</a>-->
         <div class="exit">
             <?= Html::beginForm(['/site/logout'], 'post') ?>
             <?= Html::submitButton('выйти') ?>
@@ -30,17 +30,23 @@ ProfileAsset::register($this);
         </div>
     </div>
     <?= Html::a('Создать заявку', 'create-request', ['class' => 'create']) ?>
+    <?php $form = ActiveForm::begin(['id' => 'sub_form']); ?>
+    <?= $form->field($model, 'filt')->dropDownList($status,['id' => 'filt']) ?>
+    <?php ActiveForm::end(); ?>
     <div class="problems">
         <? foreach ($requests as $key => $value) : ?>
-            <label class="problem" for="info_menu" id="problem_<?=$value['id']?>">
+            <label class="problem" for="info_menu" id="problem_<?= $value['id'] ?>">
                 <img class="hidden" src="data:image/png;base64,<?= $value['img'] ?>">
                 <h2 class="title"><?= $value['title'] ?></h2>
                 <p class="description"><?= $value['description'] ?></p>
-                <h3 class="status"><?= $value['id'] ?></h3>
-                <p class="category"><?= $value['id'] ?></p>
+                <h3 class="status"><?= $value['status'] ?></h3>
+                <p class="category"><?= $value['criterion'] ?></p>
                 <p class="date"><?= $value['date'] ?></p>
             </label>
         <? endforeach; ?>
+        <?= LinkPager::widget([
+            'pagination' => $pages,
+        ]); ?>
     </div>
     <label class="bg" for="info_menu"></label>
     <input type="checkbox" id="del">
@@ -51,6 +57,10 @@ ProfileAsset::register($this);
         <h3 class="status_menu">Статус</h3>
         <div class="inform">
             <p class="category_menu">Категория</p>
+            <p class="date_menu"></p>
+        </div>
+        <div class="inform">
+
             <p class="date_menu"></p>
         </div>
         <label for="del" class="del_but">Удалить заявку</label>

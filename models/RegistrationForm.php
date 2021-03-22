@@ -15,6 +15,7 @@ class RegistrationForm extends Model
     public $password;
     public $accept_personal;
 
+
     /**
      * @return array the validation rules.
      */

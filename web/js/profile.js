@@ -16,11 +16,14 @@ $(document).ready(function () {
         $('.status_menu').html('Статус: ' + $(this).children()[3].innerText);
         $('.category_menu').html('Категория: ' + $(this).children()[4].innerText);
         $('.date_menu').html($(this).children()[5].innerText);
-        let img = $(this).children()[0];
+        let img = $($(this).children()[0]).clone();
         $(img).removeClass('hidden');
-        $('.info_menu > div.img').html($(this).children()[0]);
+        $('.info_menu > div.img').html($(img));
         let id = $(this).attr('id').split('_')
         $('.yes > input').val(id[id.length - 1]);
     })
 
+    $('#filt').change( function (){
+        $('#sub_form').submit();
+    })
 })

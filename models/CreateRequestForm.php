@@ -14,6 +14,16 @@ class CreateRequestForm extends Model
     public $criterion;
     public $image;
 
+    public function attributeLabels()
+    {
+        return [
+            'title' => 'Заголовок',
+            'description' => 'Описание',
+            'criterion' => 'Критерий',
+            'image' => 'Фото',
+        ];
+    }
+
     /**
      * @return array the validation rules.
      */

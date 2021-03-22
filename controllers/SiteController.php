@@ -2,18 +2,25 @@
 
 namespace app\controllers;
 
+use app\entity\DirCriterion;
+use app\entity\DirStatus;
 use app\entity\Files;
 use app\entity\Requests;
 use app\entity\Users;
 use app\models\CreateRequestForm;
+use app\models\DirectoryForm;
 use app\models\RegistrationForm;
 use Yii;
+use yii\data\ActiveDataProvider;
+use yii\data\Pagination;
 use yii\filters\AccessControl;
+use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
-use app\models\ContactForm;
+use app\models\ProfileForm;
 use yii\web\UploadedFile;
 
 class SiteController extends Controller
@@ -62,9 +69,38 @@ class SiteController extends Controller
 
     public function actionIndex()
     {
-//        $file = file_get_contents('../asfq.png');
-//        return '<img src="data:image/png;base64,'.base64_encode($file).'">';
-        return $this->render('index');
+        $user_requests = Requests::find()->where(['status_id' => 2])->limit(4)->all();
+
+        $status = [];
+        foreach (DirStatus::find()->asArray()->all() as $key => $value) {
+            $status[$value['id']] = $value['status'];
+        }
+
+        $criterion = [];
+        foreach (DirCriterion::find()->asArray()->all() as $key => $value) {
+            $criterion[$value['id']] = $value['criterion'];
+        }
+
+        $requests = [];
+        foreach ($user_requests as $key => $value) {
+            $requests[$key]['id'] = $value->id;
+            $requests[$key]['title'] = $value->title;
+            $requests[$key]['description'] = $value->description;
+            $requests[$key]['criterion'] = $criterion[$value->criterion_id];
+            $requests[$key]['status'] = $status[$value->status_id];
+            $requests[$key]['date'] = date('d.m.Y', strtotime($value->date));
+            $requests[$key]['before_img'] = Files::find()->where(['id' => $value->before_img_id])->one()->file_content;
+            $requests[$key]['after_img'] = Files::find()->where(['id' => $value->after_img_id])->one()->file_content;
+        }
+        return $this->render('index', [
+            'requests' => $requests,
+            'count' => Requests::find()->where(['status_id' => 2])->count()
+        ]);
+    }
+
+    public function actionCountResolvRequest()
+    {
+        return Requests::find()->where(['status_id' => 2])->count();
     }
 
     public function actionLogin()
@@ -128,22 +164,51 @@ class SiteController extends Controller
         if ($user->middle_name) {
             $fio[] = $user->middle_name;
         }
+        $options = [];
+        $model = new ProfileForm();
+        if ($model->load(Yii::$app->request->post())) {
+            $_SESSION['filt'] = $model->filt;
+            if ($model->filt != 0) {
+                $options['status_id'] = $model->filt;
+            }
+        } else if (!empty($_SESSION['filt'])) {
+            $model->filt = $_SESSION['filt'];
+            $options['status_id'] = $_SESSION['filt'];
+        }
 
-        $user_requests = Requests::find()->where(['create_user_id' => Yii::$app->user->id])->all();
-//        return var_dump($user_requests);
+        $options['create_user_id'] = Yii::$app->user->id;
+        $user_requests = Requests::find()->where(['and', $options]);
+        $pages = new Pagination(['totalCount' => $user_requests->count(), 'pageSize' => 5]);
+        $user_requests = $user_requests->offset($pages->offset)->limit($pages->limit)->all();
+        $status = ['Все'];
+        foreach (DirStatus::find()->asArray()->all() as $key => $value) {
+            $status[$value['id']] = $value['status'];
+        }
+
+        $criterion = [];
+        foreach (DirCriterion::find()->asArray()->all() as $key => $value) {
+            $criterion[$value['id']] = $value['criterion'];
+        }
+
         $requests = [];
         foreach ($user_requests as $key => $value) {
             $requests[$key]['id'] = $value->id;
             $requests[$key]['title'] = $value->title;
             $requests[$key]['description'] = $value->description;
-            $requests[$key]['date'] = date('d.m.Y',strtotime($value->date));
+            $requests[$key]['criterion'] = $criterion[$value->criterion_id];
+            $requests[$key]['status'] = $status[$value->status_id];
+            $requests[$key]['date'] = date('d.m.Y', strtotime($value->date));
             $requests[$key]['img'] = Files::find()->where(['id' => $value->before_img_id])->one()->file_content;
         }
+
         return $this->render('profile', [
             'fio' => implode(' ', $fio),
             'email' => $user->email,
             'requests' => $requests,
-            'first_letter'=> mb_substr($fio[0],0,1).mb_substr($fio[1],0,1),
+            'first_letter' => mb_substr($fio[0], 0, 1) . mb_substr($fio[1], 0, 1),
+            'status' => $status,
+            'pages' => $pages,
+            'model' => $model,
         ]);
     }
 
@@ -157,7 +222,6 @@ class SiteController extends Controller
         if ($model->load(Yii::$app->request->post())) {
             $model->image = UploadedFile::getInstance($model, 'image');
             if ($model->validate()) {
-//                var_dump($model);
 
                 $img = new Files;
                 $img->name = $model->image->name;
@@ -175,9 +239,6 @@ class SiteController extends Controller
                 $request->create_user_id = Yii::$app->user->id;
                 $request->save();
 
-//                $img = Files::find()->where(['id' => 1])->one();
-////            var_dump($img);
-//                return '<img src="data:image/png;base64,' . $img->file_content . '">';
                 return $this->redirect('profile');
 
             }
@@ -198,8 +259,95 @@ class SiteController extends Controller
         return 'Удаленно';
     }
 
-    public function actionAbout()
+    public function actionDelete($id, $table)
     {
-        return $this->render('about');
+        if (Yii::$app->user->isGuest) {
+            return $this->goHome();
+        }
+        switch ($table) {
+            case 'criterion':
+                $query = DirCriterion::find();
+                break;
+            case 'status':
+                $query = DirStatus::find();
+                break;
+            default:
+                return var_dump($table);
+                break;
+        }
+        $query->where(['id' => $id])->one()->delete();
+        return $this->redirect(Url::to(['directory', 'type' => $table]));
+    }
+
+    public function actionDirectory($type)
+    {
+        if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
+            return $this->goHome();
+        }
+        $query = null;
+        $columns = [];
+        $columns[] = 'id';
+        $buttons = [];
+        $addRowFor = null;
+        switch ($type) {
+            case 'criterion':
+                $query = DirCriterion::find();
+                $columns[] = [
+                    'attribute' => 'criterion',
+                    'label' => 'Критерий',
+                ];
+                $buttons['delete'] = function ($url, $model, $key) {
+                    return Html::a('Удалить', Url::to(['delete', 'id' => $key, 'table' => 'criterion']));
+                };
+                break;
+            case 'status':
+                $query = DirStatus::find();
+                $columns[] = [
+                    'attribute' => 'status',
+                    'label' => 'Статус',
+                ];
+                $buttons['delete'] = function ($url, $model, $key) {
+                    return Html::a('Удалить', Url::to(['delete', 'id' => $key, 'table' => 'status']));
+                };
+                break;
+            default:
+                return var_dump($type);
+                break;
+        }
+        $model = new DirectoryForm();
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            switch ($type) {
+                case 'criterion':
+                    $new_row = new DirCriterion;
+                    $new_row->criterion = $model->text;
+                    $new_row->save();
+                    break;
+                case 'status':
+                    $new_row = new DirStatus;
+                    $new_row->status = $model->text;
+                    $new_row->save();
+                    break;
+            }
+        }
+        $columns[] = [
+            'class' => 'yii\grid\ActionColumn',
+            'header' => 'Действия',
+            'headerOptions' => ['width' => '80'],
+            'template' => '{delete}{link}',
+            'buttons' => $buttons,
+        ];
+        $provider = new ActiveDataProvider(
+            [
+                'query' => $query,
+                'pagination' => [
+                    'pageSize' => 10,
+                ],
+            ]
+        );
+        return $this->render('directory', [
+            'model' => $model,
+            'provider' => $provider,
+            'columns' => $columns,
+        ]);
     }
 }
