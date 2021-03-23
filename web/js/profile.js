@@ -1,6 +1,6 @@
 $(document).ready(function () {
 
-    $('.yes').click(function () {
+    $('.del_window .yes').click(function () {
         $.post(
             'delete-request',
             {id: $($(this).children()[0]).val()},
@@ -21,9 +21,24 @@ $(document).ready(function () {
         $('.info_menu > div.img').html($(img));
         let id = $(this).attr('id').split('_')
         $('.yes > input').val(id[id.length - 1]);
+        $('.hidden_id').val(id[id.length - 1]);
     })
 
     $('#filt').change( function (){
         $('#sub_form').submit();
+    })
+
+    $('#accept_yes').click(function () {
+        $('#accept_form').submit();
+    })
+
+    $('#reject_yes').click(function () {
+        $.post(
+            'reject-request',
+            {id: $($(this).children()[0]).val()},
+            function (data) {
+                location.reload();
+            }
+        );
     })
 })
