@@ -7,6 +7,7 @@ use app\entity\DirStatus;
 use app\entity\Files;
 use app\entity\Requests;
 use app\entity\Users;
+use app\models\AcceptRequestForm;
 use app\models\CreateRequestForm;
 use app\models\DirectoryForm;
 use app\models\RegistrationForm;
@@ -176,7 +177,9 @@ class SiteController extends Controller
             $options['status_id'] = $_SESSION['filt'];
         }
 
-        $options['create_user_id'] = Yii::$app->user->id;
+        if ($user->is_admin != 1) {
+            $options['create_user_id'] = Yii::$app->user->id;
+        }
         $user_requests = Requests::find()->where(['and', $options]);
         $pages = new Pagination(['totalCount' => $user_requests->count(), 'pageSize' => 5]);
         $user_requests = $user_requests->offset($pages->offset)->limit($pages->limit)->all();
@@ -209,6 +212,7 @@ class SiteController extends Controller
             'status' => $status,
             'pages' => $pages,
             'model' => $model,
+            'model_accept' => new AcceptRequestForm(),
         ]);
     }
 
@@ -243,9 +247,13 @@ class SiteController extends Controller
 
             }
         }
-
+        $criterion = [];
+        foreach (DirCriterion::find()->asArray()->all() as $key => $value) {
+            $criterion[$value['id']] = $value['criterion'];
+        }
         return $this->render('create-request', [
             'model' => $model,
+            'criterion' => $criterion,
         ]);
     }
 
@@ -257,6 +265,40 @@ class SiteController extends Controller
         $post = Yii::$app->request->post();
         Requests::find()->where(['id' => $post['id']])->one()->delete();
         return 'Удаленно';
+    }
+
+    public function actionAcceptRequest()
+    {
+        //раб тут
+        $model = new AcceptRequestForm();
+        if ($model->load(Yii::$app->request->post())) {
+            $model->image = UploadedFile::getInstance($model, 'image');
+            if ($model->validate()) {
+                $img = new Files;
+                $img->name = $model->image->name;
+                $img->file_content = base64_encode(file_get_contents($model->image->tempName));
+                $img->size = $model->image->size;
+                $img->permission = $model->image->type;
+                $img->save();
+
+                $request = Requests::find()->where(['id' => $post['id']])->one();
+                $request->status_id = 3;
+                $request->save();
+            }
+        }
+        return $this->redirect('profile');
+    }
+
+    public function actionRejectRequest()
+    {
+        if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin != 1) {
+            return $this->goHome();
+        }
+        $post = Yii::$app->request->post();
+        $request = Requests::find()->where(['id' => $post['id']])->one();
+        $request->status_id = 3;
+        $request->save();
+        return 'Статус изменён';
     }
 
     public function actionDelete($id, $table)

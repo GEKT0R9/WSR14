@@ -8,6 +8,7 @@
 use app\assets\ProfileAsset;
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
+use yii\web\UploadedFile;
 use yii\widgets\LinkPager;
 
 $this->title = 'Profile';
@@ -31,7 +32,7 @@ ProfileAsset::register($this);
     </div>
     <?= Html::a('Создать заявку', 'create-request', ['class' => 'create']) ?>
     <?php $form = ActiveForm::begin(['id' => 'sub_form']); ?>
-    <?= $form->field($model, 'filt')->dropDownList($status,['id' => 'filt']) ?>
+    <?= $form->field($model, 'filt')->dropDownList($status, ['id' => 'filt']) ?>
     <?php ActiveForm::end(); ?>
     <div class="problems">
         <? foreach ($requests as $key => $value) : ?>
@@ -50,6 +51,8 @@ ProfileAsset::register($this);
     </div>
     <label class="bg" for="info_menu"></label>
     <input type="checkbox" id="del">
+    <input type="checkbox" id="accept">
+    <input type="checkbox" id="reject">
     <div class="info_menu">
         <div class="img"></div>
         <h2 class="title_menu"></h2>
@@ -59,9 +62,9 @@ ProfileAsset::register($this);
             <p class="category_menu">Категория</p>
             <p class="date_menu"></p>
         </div>
-        <div class="inform">
-
-            <p class="date_menu"></p>
+        <div class="status_but">
+            <label for="accept">Принять</label>
+            <label for="reject">Отменить</label>
         </div>
         <label for="del" class="del_but">Удалить заявку</label>
     </div>
@@ -70,6 +73,33 @@ ProfileAsset::register($this);
         <h2>Вы действительно хотите удалить заявку?</h2>
         <a class="yes"><input type="hidden" value="">Удалить</a>
         <label for="del" class="no">Отмена</label>
+    </div>
+
+    <label class="bg3" for="accept"></label>
+    <div class="accept_window">
+        <h2>Принять заявку?</h2>
+
+        <?php $form = ActiveForm::begin(['id' => 'accept_form', 'action' => 'accept-request']); ?>
+        <?=
+        $form->field($model_accept, 'image')->fileInput(
+            [
+                'class' => 'file_input',
+                'accept' => 'image/*',
+                'size' => '10MB',
+            ]
+        )->label(null , ['class' => 'file_label']) ?>
+        <?= $form->field($model_accept, 'id')->hiddenInput(['class' => 'hidden_id'])->label(false)?>
+        <?php ActiveForm::end(); ?>
+        <p></p>
+        <a id="accept_yes" class="yes"><input type="hidden" value="">Принять</a>
+        <label for="accept" class="no">Отмена</label>
+    </div>
+
+    <label class="bg4" for="reject"></label>
+    <div class="reject_window">
+        <h2>Отменить заявку?</h2>
+        <a id="reject_yes" class="yes"><input type="hidden" value="">Отменить</a>
+        <label for="reject" class="no">Отмена</label>
     </div>
 </div>
 

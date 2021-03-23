@@ -2,6 +2,7 @@
 
 /* @var $this yii\web\View */
 /* @var $form yii\bootstrap\ActiveForm */
+
 /* @var $model app\models\LoginForm */
 
 use yii\helpers\Html;
@@ -23,9 +24,14 @@ $this->title = 'Создание заявки';
 
     <?= $form->field($model, 'title')->textInput(['autofocus' => true]) ?>
     <?= $form->field($model, 'description')->textarea() ?>
-    <?= $form->field($model, 'criterion')->dropDownList([1,2,3,4]) ?>
+    <?= $form->field($model, 'criterion')->dropDownList($criterion) ?>
 
-    <?= $form->field($model, 'image')->fileInput(['accept' => 'image/*', 'size' => '10MB', 'value' => UploadedFile::getInstance($model, 'image')]) ?>
+    <?=
+    $form->field($model, 'image')->fileInput([
+        'accept' => 'image/*',
+        'size' => '10MB',
+        'value' => UploadedFile::getInstance($model, 'image')
+    ]) ?>
 
     <div class="form-group">
         <div class="col-lg-offset-1 col-lg-11">
