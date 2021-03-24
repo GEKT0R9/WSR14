@@ -8,10 +8,9 @@
 use app\assets\ProfileAsset;
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
-use yii\web\UploadedFile;
 use yii\widgets\LinkPager;
 
-$this->title = 'Profile';
+$this->title = 'Профиль';
 ProfileAsset::register($this);
 ?>
 
@@ -25,12 +24,12 @@ ProfileAsset::register($this);
         <h3 class="fio"><?= $fio ?></h3>
         <p class="mail"><?= $email ?></p>
         <div class="exit">
-            <?= Html::beginForm(['/site/logout'], 'post') ?>
+            <?= Html::beginForm(['/main/logout'], 'post') ?>
             <?= Html::submitButton('выйти') ?>
             <?= Html::endForm() ?>
         </div>
     </div>
-    <?= Html::a('Создать заявку', 'create-request', ['class' => 'create']) ?>
+    <?= Html::a('Создать заявку', '/profile/create-request', ['class' => 'create']) ?>
     <?php $form = ActiveForm::begin(['id' => 'sub_form']); ?>
     <?= $form->field($model, 'filt')->dropDownList($status, ['id' => 'filt']) ?>
     <?php ActiveForm::end(); ?>
@@ -45,7 +44,7 @@ ProfileAsset::register($this);
                 <div class="hidden">
                     <div class="info_menu">
                         <div class="img">
-                            <img class="hidden" src="data:image/png;base64,<?= $value['img'] ?>">
+                            <img src="data:image/png;base64,<?= $value['img'] ?>">
                         </div>
                         <h2 class="title_menu"><?= $value['title'] ?></h2>
                         <p class="description_menu"><?= $value['description'] ?></p>
@@ -60,7 +59,9 @@ ProfileAsset::register($this);
                                 <label for="reject">Отменить</label>
                             </div>
                         <? endif; ?>
-                        <label for="del" class="del_but">Удалить заявку</label>
+                        <? if ($value['allow_del']): ?>
+                            <label for="del" class="del_but">Удалить заявку</label>
+                        <? endif; ?>
                     </div>
                 </div>
             </label>
@@ -101,7 +102,7 @@ ProfileAsset::register($this);
     <div class="accept_window">
         <h2>Принять заявку?</h2>
 
-        <?php $form = ActiveForm::begin(['id' => 'accept_form', 'action' => 'accept-request']); ?>
+        <?php $form = ActiveForm::begin(['id' => 'accept_form', 'action' => '/profile/accept-request']); ?>
         <?=
         $form->field($model_accept, 'image')->fileInput(
             [

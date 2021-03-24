@@ -12,7 +12,10 @@ $(document).ready(function () {
 
     $('.problem').click(function () {
         if($(this).find('.info_menu').length > 0){
-            $('.content > .info_menu').replaceWith($(this).find('.info_menu'));
+            let id = $(this).attr('id').split('_')
+            $('.yes > input').val(id[id.length - 1]);
+            $('.hidden_id').val(id[id.length - 1]);
+            $('.content > .info_menu').replaceWith($(this).find('.info_menu').clone());
         }
         // $('.title_menu').html($(this).children()[1].innerText);
         // $('.description_menu').html($(this).children()[2].innerText);
@@ -22,9 +25,7 @@ $(document).ready(function () {
         // let img = $($(this).children()[0]).clone();
         // $(img).removeClass('hidden');
         // $('.info_menu > div.img').html($(img));
-        // let id = $(this).attr('id').split('_')
-        // $('.yes > input').val(id[id.length - 1]);
-        // $('.hidden_id').val(id[id.length - 1]);
+
     })
 
     $('#filt').change( function (){
@@ -32,7 +33,9 @@ $(document).ready(function () {
     })
 
     $('#accept_yes').click(function () {
+        console.log(1);
         $('#accept_form').submit();
+        console.log(1);
     })
 
     $('#reject_yes').click(function () {

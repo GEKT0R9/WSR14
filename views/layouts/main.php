@@ -1,6 +1,6 @@
 <?php
 
-/* @var $this \yii\web\View */
+/* @var $this View */
 
 /* @var $content string */
 
@@ -8,6 +8,7 @@ use app\widgets\Alert;
 use yii\helpers\Html;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
+use yii\web\View;
 use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
 
@@ -38,14 +39,14 @@ AppAsset::register($this);
     ]);
     $items = [
         Yii::$app->user->isGuest ? (
-        ['label' => 'Авторизация', 'url' => ['/site/login']]
+        ['label' => 'Авторизация', 'url' => ['/main/login']]
         ) : (
-        ['label' => 'Профиль', 'url' => ['/site/profile']]
+        ['label' => 'Профиль', 'url' => ['/profile']]
         )
     ];
     if (Yii::$app->user->identity->is_admin == 1) {
-        $items[] = ['label' => 'Статусы', 'url' => ['/site/directory', 'type' => 'status']];
-        $items[] = ['label' => 'Критерии', 'url' => ['/site/directory', 'type' => 'criterion']];
+        $items[] = ['label' => 'Статусы', 'url' => ['/directory', 'type' => 'status']];
+        $items[] = ['label' => 'Критерии', 'url' => ['/directory', 'type' => 'criterion']];
     }
     echo Nav::widget([
         'options' => ['class' => 'ul'],

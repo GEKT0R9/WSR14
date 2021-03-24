@@ -3,6 +3,7 @@
 namespace app\models;
 
 use app\entity\Users;
+use app\repository\UserRepository;
 use yii\base\BaseObject;
 use yii\web\IdentityInterface;
 
@@ -34,7 +35,7 @@ class User extends BaseObject implements IdentityInterface
      */
     public static function findIdentity($id)
     {
-        return new static(Users::find()->where(['id' => $id])->one());
+        return new static(UserRepository::findOneUser(['id' => $id]));
     }
 
     /**
@@ -53,7 +54,7 @@ class User extends BaseObject implements IdentityInterface
      */
     public static function findByUsername($username)
     {
-        return new static(Users::find()->where(['username' => $username])->one());
+        return new static(UserRepository::findOneUser(['username' => $username]));
     }
 
     /**
@@ -64,7 +65,7 @@ class User extends BaseObject implements IdentityInterface
      */
     public static function findByEmail($email)
     {
-        return new static(Users::find()->where(['email' => $email])->one());
+        return new static(UserRepository::findOneUser(['email' => $email]));
     }
 
     /**
