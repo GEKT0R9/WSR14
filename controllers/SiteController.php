@@ -202,6 +202,7 @@ class SiteController extends Controller
             $requests[$key]['status'] = $status[$value->status_id];
             $requests[$key]['date'] = date('d.m.Y', strtotime($value->date));
             $requests[$key]['img'] = Files::find()->where(['id' => $value->before_img_id])->one()->file_content;
+            $requests[$key]['allow'] = ($user->is_admin == 1 && $value->status_id != 2 && $value->status_id != 3);
         }
 
         return $this->render('profile', [
@@ -281,8 +282,9 @@ class SiteController extends Controller
                 $img->permission = $model->image->type;
                 $img->save();
 
-                $request = Requests::find()->where(['id' => $post['id']])->one();
-                $request->status_id = 3;
+                $request = Requests::find()->where(['id' => $model->id])->one();
+                $request->status_id = 2;
+                $request->after_img_id = $img->id;
                 $request->save();
             }
         }

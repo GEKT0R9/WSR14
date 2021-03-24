@@ -37,12 +37,32 @@ ProfileAsset::register($this);
     <div class="problems">
         <? foreach ($requests as $key => $value) : ?>
             <label class="problem" for="info_menu" id="problem_<?= $value['id'] ?>">
-                <img class="hidden" src="data:image/png;base64,<?= $value['img'] ?>">
                 <h2 class="title"><?= $value['title'] ?></h2>
                 <p class="description"><?= $value['description'] ?></p>
                 <h3 class="status"><?= $value['status'] ?></h3>
                 <p class="category"><?= $value['criterion'] ?></p>
                 <p class="date"><?= $value['date'] ?></p>
+                <div class="hidden">
+                    <div class="info_menu">
+                        <div class="img">
+                            <img class="hidden" src="data:image/png;base64,<?= $value['img'] ?>">
+                        </div>
+                        <h2 class="title_menu"><?= $value['title'] ?></h2>
+                        <p class="description_menu"><?= $value['description'] ?></p>
+                        <h3 class="status_menu">Статус: <?= $value['status'] ?></h3>
+                        <div class="inform">
+                            <p class="category_menu">Категория: <?= $value['criterion'] ?></p>
+                            <p class="date_menu"><?= $value['date'] ?></p>
+                        </div>
+                        <? if ($value['allow']): ?>
+                            <div class="status_but">
+                                <label for="accept">Принять</label>
+                                <label for="reject">Отменить</label>
+                            </div>
+                        <? endif; ?>
+                        <label for="del" class="del_but">Удалить заявку</label>
+                    </div>
+                </div>
             </label>
         <? endforeach; ?>
         <?= LinkPager::widget([
@@ -62,10 +82,12 @@ ProfileAsset::register($this);
             <p class="category_menu">Категория</p>
             <p class="date_menu"></p>
         </div>
-        <div class="status_but">
-            <label for="accept">Принять</label>
-            <label for="reject">Отменить</label>
-        </div>
+        <? if (Yii::$app->user->identity->is_admin == 1): ?>
+            <div class="status_but">
+                <label for="accept">Принять</label>
+                <label for="reject">Отменить</label>
+            </div>
+        <? endif; ?>
         <label for="del" class="del_but">Удалить заявку</label>
     </div>
     <label class="bg2" for="del"></label>
@@ -87,8 +109,8 @@ ProfileAsset::register($this);
                 'accept' => 'image/*',
                 'size' => '10MB',
             ]
-        )->label(null , ['class' => 'file_label']) ?>
-        <?= $form->field($model_accept, 'id')->hiddenInput(['class' => 'hidden_id'])->label(false)?>
+        )->label(null, ['class' => 'file_label']) ?>
+        <?= $form->field($model_accept, 'id')->hiddenInput(['class' => 'hidden_id'])->label(false) ?>
         <?php ActiveForm::end(); ?>
         <p></p>
         <a id="accept_yes" class="yes"><input type="hidden" value="">Принять</a>
@@ -102,36 +124,3 @@ ProfileAsset::register($this);
         <label for="reject" class="no">Отмена</label>
     </div>
 </div>
-
-<!--<div class="site-login">-->
-<!--    <h1>--><? //= $fio ?><!--</h1>-->
-<!--    <p>--><? //= $email ?><!--</p>-->
-<!---->
-<!--    --><? //= Html::a('Создать заявку', 'create-request', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
-<!---->
-<!--    <div>-->
-<!--        --><? //= Html::beginForm(['/site/logout'], 'post') ?>
-<!--        --><? //= Html::submitButton('Выйти', ['class' => 'btn btn-primary']) ?>
-<!--        --><? //= Html::endForm() ?>
-<!--    </div>-->
-<!---->
-<!--    --><? // foreach ($requests as $key => $value) : ?>
-<!--        <div>-->
-<!--            <div id="title">-->
-<!--                --><? //= $value['title'] ?>
-<!--            </div>-->
-<!--            <div>-->
-<!--                --><? //= $value['description'] ?>
-<!--            </div>-->
-<!--            <div>-->
-<!--                --><? //= $value['date'] ?>
-<!--            </div>-->
-<!--            <div>-->
-<!--                <img src="data:image/png;base64,--><? //= $value['img'] ?><!--">-->
-<!--            </div>-->
-<!--            <div>-->
-<!--                <button class="del" value="--><? //= $value['id'] ?><!--">Удалить</button>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    --><? // endforeach; ?>
-<!--</div>-->
