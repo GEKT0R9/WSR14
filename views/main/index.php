@@ -9,10 +9,6 @@ IndexAsset::register($this);
 ?>
 <div class="content">
     <div class="problems">
-        <div class="counter">
-            <h3>Проблем решено:</h3>
-            <p id="counter"><?=$count?></p>
-        </div>
         <?foreach ($requests as $key => $value):?>
             <div class="promlem">
                 <div class="before img">
@@ -29,5 +25,10 @@ IndexAsset::register($this);
                 </div>
             </div>
         <?endforeach;?>
+    </div>
+    <div class="counter">
+        <h3>Проблем решено:</h3>
+        <p id="counter"><?=$count?></p>
+    </div>
 </div>
 

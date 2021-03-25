@@ -30,10 +30,11 @@ ProfileAsset::register($this);
         </div>
     </div>
     <?= Html::a('Создать заявку', '/profile/create-request', ['class' => 'create']) ?>
-    <?php $form = ActiveForm::begin(['id' => 'sub_form']); ?>
-    <?= $form->field($model, 'filt')->dropDownList($status, ['id' => 'filt']) ?>
-    <?php ActiveForm::end(); ?>
+
     <div class="problems">
+        <?php $form = ActiveForm::begin(['id' => 'sub_form']); ?>
+        <?= $form->field($model, 'filt')->dropDownList($status, ['id' => 'filt'])->label(false) ?>
+        <?php ActiveForm::end(); ?>
         <? foreach ($requests as $key => $value) : ?>
             <label class="problem" for="info_menu" id="problem_<?= $value['id'] ?>">
                 <h2 class="title"><?= $value['title'] ?></h2>

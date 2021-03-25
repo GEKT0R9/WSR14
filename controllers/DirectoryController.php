@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\models\DirectoryForm;
 use app\repository\DirRepository;
+use app\repository\RequestRepository;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\helpers\Html;
@@ -109,6 +110,9 @@ class DirectoryController extends Controller
                 break;
         }
         $query->where(['id' => $id])->one()->delete();
+        if ($table == 'criterion') {
+            RequestRepository::deleteRequests(['criterion_id' => $id]);
+        }
         return $this->redirect(Url::to(['/directory', 'type' => $table]));
     }
 }

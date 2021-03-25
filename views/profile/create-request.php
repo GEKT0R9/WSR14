@@ -5,39 +5,60 @@
 
 /* @var $model app\models\LoginForm */
 
+use app\assets\FormAsset;
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 use yii\web\UploadedFile;
 
 $this->title = 'Создание заявки';
+FormAsset::register($this);
 ?>
-<div class="site-login">
+<div class="form">
 
-    <?php $form = ActiveForm::begin([
-        'id' => 'login-form',
-        'layout' => 'horizontal',
-        'fieldConfig' => [
-            'template' => "{label}\n<div class=\"col-lg-3\">{input}</div>\n<div class=\"col-lg-8\">{error}</div>",
-            'labelOptions' => ['class' => 'col-lg-1 control-label'],
-        ],
-    ]); ?>
+    <h1><?= Html::encode($this->title) ?></h1>
 
-    <?= $form->field($model, 'title')->textInput(['autofocus' => true]) ?>
-    <?= $form->field($model, 'description')->textarea() ?>
-    <?= $form->field($model, 'criterion')->dropDownList($criterion) ?>
+    <?php $form = ActiveForm::begin(); ?>
 
     <?=
-    $form->field($model, 'image')->fileInput([
-        'accept' => 'image/*',
-        'size' => '10MB',
-        'value' => UploadedFile::getInstance($model, 'image')
-    ]) ?>
-
-    <div class="form-group">
-        <div class="col-lg-offset-1 col-lg-11">
-            <?= Html::submitButton('Создать', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
+    $form->field($model, 'title')
+        ->textInput(['autofocus' => true, 'placeholder' => 'Введите название проблемы'])
+        ->label(false)
+        ->error(false)
+    ?>
+    <?=
+    $form->field($model, 'description')
+        ->textarea(['placeholder' => 'Введите описание проблемы'])
+        ->label(false)
+        ->error(false)
+    ?>
+    <?=
+    $form->field($model, 'criterion')
+        ->dropDownList($criterion, ['class' => 'select'])
+        ->label(false)
+        ->error(false)
+    ?>
+    <div class="file_input">
+        <div class="form-group">
+            <label class="label">
+                <span class="title">Добавить файл</span>
+                <?=
+                $form->field($model, 'image')
+                    ->fileInput([
+                        'class' => 'file',
+                        'accept' => 'image/*',
+                        'size' => '10MB',
+                        'value' => UploadedFile::getInstance($model, 'image')
+                    ])
+                    ->label(false)
+                    ->error(false)
+                ?>
+            </label>
         </div>
     </div>
+
+
+    <?= Html::submitButton('Создать') ?>
+
 
     <?php ActiveForm::end(); ?>
 

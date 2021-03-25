@@ -16,6 +16,13 @@ class RegistrationForm extends Model
     public $accept_personal;
 
 
+
+    public function attributeLabels()
+    {
+        return [
+            'accept_personal' => 'Подтверждение на обработку персональных данных',
+        ];
+    }
     /**
      * @return array the validation rules.
      */

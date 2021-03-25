@@ -62,4 +62,8 @@ class RequestRepository
     public static function deleteOneRequest($where) {
         Requests::find()->where($where)->one()->delete();
     }
+
+    public static function deleteRequests($where) {
+        Requests::deleteAll($where);
+    }
 }

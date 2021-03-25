@@ -52,7 +52,7 @@ class ProfileController extends Controller
             $options['create_user_id'] = Yii::$app->user->id;
         }
         $user_requests = RequestRepository::getRequestsFind(['and', $options]);
-        $pages = new Pagination(['totalCount' => $user_requests->count(), 'pageSize' => 5]);
+        $pages = new Pagination(['totalCount' => $user_requests->count(), 'pageSize' => 10]);
         $user_requests = $user_requests->offset($pages->offset)->limit($pages->limit)->all();
         $status = DirRepository::getStatusAsArray();
         $status[0] = 'Все';
