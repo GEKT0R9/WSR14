@@ -5,6 +5,11 @@
     user-select: none;
     overflow-x: hidden;
     box-sizing: border-box;
+    scrollbar-width: none;
+}
+
+*::-webkit-scrollbar {
+    width: 0px;
 }
 
 .h1, .h2, .h3, h1, h2, h3 {
@@ -66,11 +71,11 @@ a:hover {
     background: none;
     border: none;
 }
+
 .exit button {
     background: none;
     border: none;
 }
-
 
 
 .exit:hover {
@@ -94,7 +99,8 @@ a:hover {
 
 .problems {
     width: 1000px;
-    height: 80vh;
+    min-height: 64.5vh;
+    height: max-content;
     margin: 10px auto;
 }
 
@@ -232,7 +238,7 @@ footer {
 
 .del_window,
 .accept_window,
-.reject_window{
+.reject_window {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -252,7 +258,7 @@ footer {
 
 .bg2,
 .bg3,
-.bg4{
+.bg4 {
     position: fixed;
     z-index: 4;
     top: 0;
@@ -290,7 +296,7 @@ footer {
 .del_window a,
 .del_window label,
 .reject_window a,
-.reject_window label{
+.reject_window label {
     display: inline-table;
     margin-top: 50px;
     width: max-content;
@@ -301,7 +307,7 @@ footer {
 }
 
 .accept_window a,
-.accept_window label{
+.accept_window label {
     display: inline-table;
     margin-top: 10px;
     width: max-content;
@@ -320,13 +326,14 @@ footer {
     box-shadow: 0px -4px 8px -1px rgba(34, 60, 80, 0.2) inset;
 }
 
-.status_but{
+.status_but {
     margin-top: 10px;
     text-align: center;
     display: grid;
-    grid-template-columns: repeat(2,1fr);
+    grid-template-columns: repeat(2, 1fr);
 }
-.status_but label{
+
+.status_but label {
     display: block;
     width: max-content;
     margin: 25px auto;
@@ -341,7 +348,7 @@ footer {
 
 }
 
-.accept_window .yes{
+.accept_window .yes {
     color: #00e0d0;
     border: 1px solid #00e0d0;
 
@@ -356,19 +363,41 @@ footer {
     border: 1px solid rgb(131, 131, 131);
 }
 
-input[type="file"].file_input{
+input[type="file"].file_input {
     display: none;
 }
 
-#accept_form{
+#accept_form {
     height: 35px;
     overflow-y: hidden;
 }
 
-label.file_label{
+label.file_label {
     margin-top: 10px;
     cursor: pointer;
 }
 
-label.file_label:hover{
-    box-shadow: 0px -4px 8px -1px rgba(0, 0, 0, 0) inset;}
+label.file_label:hover {
+    box-shadow: 0px -4px 8px -1px rgba(0, 0, 0, 0) inset;
+}
+
+#filt{
+    display: block;
+    float: right;
+    width: 150px;
+border-radius: 0px;
+    font-size: 20px;
+    border: none;
+    border-bottom: 1px solid black;
+    transition: .2s border-bottom ease;
+    /*appearance: none;*/
+    cursor: pointer;
+
+    box-shadow: none;
+}
+
+
+#filt:focus,
+#filt:hover {
+    border-bottom: 1px solid #00e0d0;
+}

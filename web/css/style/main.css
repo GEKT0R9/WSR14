@@ -3,6 +3,10 @@
     margin: 0;
     font-family: Roboto;
     user-select: none;
+    scrollbar-width:none;
+}
+*::-webkit-scrollbar{
+    width: 0px;
 }
 
 a {
@@ -12,16 +16,16 @@ a {
 
 .content {
     width: 1366px;
-    margin: 0 auto;
-    /* display: grid; */
+    margin: 50px auto;
+     display: grid;
     grid-template-columns: 2fr 1fr;
     /* background: #7e72af; */
 }
 
 .problems {
-    margin: 50px auto;
+    margin: 0 auto;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     grid-gap: 25px;
 }
 
@@ -29,7 +33,7 @@ a {
     margin: 0 auto;
     width: 400px;
     height: 400px;
-    /* border: 1px solid rgba(0, 0, 0, 0); */
+     /*border: 1px solid rgb(25, 190, 68);*/
     transition: .2s all;
 }
 
@@ -84,7 +88,6 @@ a {
 }
 
 .counter {
-    margin: 0 auto;
     width: 400px;
     height: 400px;
     border-radius: 5px;

@@ -1,7 +1,7 @@
 $(document).ready(function () {
     setInterval(function (){
         $.post(
-            'main/count-resolv-request',
+            '/main/count-resolv-request',
             {},
             function (count) {
                 if ($('#counter')[0].innerText !== count) {
