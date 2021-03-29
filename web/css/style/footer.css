@@ -11,3 +11,7 @@ footer p {
     color: #00e0d0;
     text-align: center;
 }
+
+.wrap {
+    min-height: calc(100vh - 50px);
+}

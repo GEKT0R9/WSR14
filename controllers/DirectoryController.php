@@ -43,7 +43,7 @@ class DirectoryController extends Controller
                     'label' => 'Критерий',
                 ];
                 $buttons['delete'] = function ($url, $model, $key) {
-                    return Html::a('Удалить', Url::to(['delete', 'id' => $key, 'table' => 'criterion']));
+                    return Html::a('Удалить', Url::to(['delete', 'id' => $key, 'table' => 'criterion']),['class' => 'del']);
                 };
                 break;
             case 'status':
@@ -53,7 +53,7 @@ class DirectoryController extends Controller
                     'label' => 'Статус',
                 ];
                 $buttons['delete'] = function ($url, $model, $key) {
-                    return Html::a('Удалить', Url::to(['delete', 'id' => $key, 'table' => 'status']));
+                    return Html::a('Удалить', Url::to(['delete', 'id' => $key, 'table' => 'status']),['class' => 'del']);
                 };
                 break;
             default:

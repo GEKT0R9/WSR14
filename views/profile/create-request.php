@@ -55,6 +55,7 @@ FormAsset::register($this);
             </label>
         </div>
     </div>
+    <p id="file_name"></p>
 
 
     <?= Html::submitButton('Создать') ?>

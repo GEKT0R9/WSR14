@@ -12,7 +12,12 @@
     width: 0px;
 }
 
-.h1, .h2, .h3, h1, h2, h3 {
+.h1,
+.h2,
+.h3,
+h1,
+h2,
+h3 {
     margin: 0;
     line-height: initial;
 }
@@ -76,7 +81,6 @@ a:hover {
     background: none;
     border: none;
 }
-
 
 .exit:hover {
     color: black;
@@ -186,11 +190,11 @@ footer {
     display: none;
 }
 
-#info_menu:checked ~ .info_menu {
+#info_menu:checked~.info_menu {
     right: 0%;
 }
 
-#info_menu:checked ~ .bg {
+#info_menu:checked~.bg {
     opacity: 1;
     visibility: inherit;
 }
@@ -200,7 +204,12 @@ footer {
     border-radius: 5px;
     width: 100%;
     height: 300px;
-    background: #000;
+    /* background: #000; */
+    text-align: center;
+}
+
+.img img {
+    height: 100%;
 }
 
 .description_menu {
@@ -271,24 +280,24 @@ footer {
     visibility: hidden;
 }
 
-#del:checked ~ .bg2,
-#accept:checked ~ .bg3,
-#reject:checked ~ .bg4 {
+#del:checked~.bg2,
+#accept:checked~.bg3,
+#reject:checked~.bg4 {
     opacity: 1;
     visibility: inherit;
 }
 
-#del:checked ~ .del_window {
+#del:checked~.del_window {
     opacity: 1;
     visibility: inherit;
 }
 
-#accept:checked ~ .accept_window {
+#accept:checked~.accept_window {
     opacity: 1;
     visibility: inherit;
 }
 
-#reject:checked ~ .reject_window {
+#reject:checked~.reject_window {
     opacity: 1;
     visibility: inherit;
 }
@@ -345,13 +354,11 @@ footer {
 
 .status_but label:hover {
     border: 1px solid #00e0d0;
-
 }
 
 .accept_window .yes {
     color: #00e0d0;
     border: 1px solid #00e0d0;
-
 }
 
 .yes {
@@ -368,9 +375,15 @@ input[type="file"].file_input {
 }
 
 #accept_form {
-    height: 35px;
+    height: 70px;
     overflow-y: hidden;
 }
+
+.form-group {
+    height: 35px;
+}
+
+#file_name {}
 
 label.file_label {
     margin-top: 10px;
@@ -381,21 +394,19 @@ label.file_label:hover {
     box-shadow: 0px -4px 8px -1px rgba(0, 0, 0, 0) inset;
 }
 
-#filt{
+#filt {
     display: block;
     float: right;
     width: 150px;
-border-radius: 0px;
+    border-radius: 0px;
     font-size: 20px;
     border: none;
     border-bottom: 1px solid black;
     transition: .2s border-bottom ease;
     /*appearance: none;*/
     cursor: pointer;
-
     box-shadow: none;
 }
-
 
 #filt:focus,
 #filt:hover {

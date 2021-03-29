@@ -112,6 +112,7 @@ ProfileAsset::register($this);
                 'size' => '10MB',
             ]
         )->label(null, ['class' => 'file_label']) ?>
+        <p id="file_name"></p>
         <?= $form->field($model_accept, 'id')->hiddenInput(['class' => 'hidden_id'])->label(false) ?>
         <?php ActiveForm::end(); ?>
         <p></p>
