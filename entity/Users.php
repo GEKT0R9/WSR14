@@ -5,15 +5,15 @@ namespace app\entity;
 use yii\db\ActiveRecord;
 
 /**
- * Class Users
- * @property int id
- * @property string last_name
- * @property string first_name
- * @property string middle_name
- * @property string username
- * @property string email
- * @property string password
- * @property int is_admin
+ * Таблица пользователей
+ * @property int id идентификатор
+ * @property string last_name фамилия
+ * @property string first_name имя
+ * @property string|null middle_name отчетсво
+ * @property string username логин пользователя
+ * @property string email электронная почта
+ * @property string password пароль
+ * @property int is_admin идентификатор администратора
  * @package app\entity
  */
 class Users extends ActiveRecord

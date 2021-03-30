@@ -3,9 +3,16 @@
 namespace app\repository;
 
 use app\entity\Requests;
+use Throwable;
+use yii\db\ActiveQuery;
+use yii\db\StaleObjectException;
 
 class RequestRepository
 {
+    /**
+     * Вывод 4 последних решённых заявок
+     * @return array
+     */
     public static function getFourRequestsForMain() {
         $user_requests = Requests::find()
             ->where(['status_id' => 2])
@@ -30,14 +37,35 @@ class RequestRepository
         return $requests;
     }
 
+    /**
+     * получение кол-ва заявок в таблице по where
+     * @param array|null $where запрос
+     * @return bool|int|string|null
+     */
     public static function getCountRequests($where = null) {
         return Requests::find()->where($where)->count();
     }
 
+    /**
+     * получение заявок в таблице по where
+     * @param array $where запрос
+     * @return ActiveQuery
+     */
     public static function getRequestsFind($where) {
         return Requests::find()->where($where);
     }
 
+    /**
+     * Создание заявки
+     * @param string $title заголовок
+     * @param string $description описание
+     * @param int $criterion_id идентификатор кримтерия
+     * @param int $before_img_id идентификатор фото "до"
+     * @param int|null $after_img_id идентификатор фото "после" (Не обязательно)
+     * @param int $status_id идентификатор статуса
+     * @param int $create_user_id идентификатор пользователя
+     * @return Requests
+     */
     public static function createRequest(
         $title,
         $description,
@@ -59,10 +87,20 @@ class RequestRepository
         return $request;
     }
 
+    /**
+     * Удалить одну заявку по where
+     * @param array $where запрос
+     * @throws Throwable
+     * @throws StaleObjectException
+     */
     public static function deleteOneRequest($where) {
         Requests::find()->where($where)->one()->delete();
     }
 
+    /**
+     * Удалить множество заявок по where
+     * @param array $where запрос
+     */
     public static function deleteRequests($where) {
         Requests::deleteAll($where);
     }

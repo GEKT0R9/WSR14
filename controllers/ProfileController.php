@@ -11,6 +11,7 @@ use app\repository\RequestRepository;
 use Yii;
 use yii\data\Pagination;
 use yii\web\Controller;
+use yii\web\Response;
 use yii\web\UploadedFile;
 
 class ProfileController extends Controller
@@ -24,6 +25,10 @@ class ProfileController extends Controller
         ];
     }
 
+    /**
+     * Страница "Профиль"
+     * @return string|Response
+     */
     public function actionIndex()
     {
         if (Yii::$app->user->isGuest) {
@@ -83,6 +88,10 @@ class ProfileController extends Controller
         ]);
     }
 
+    /**
+     * Страница создания заявки
+     * @return string|Response
+     */
     public function actionCreateRequest()
     {
         if (Yii::$app->user->isGuest) {
@@ -122,6 +131,10 @@ class ProfileController extends Controller
         ]);
     }
 
+    /**
+     * Удаление заявки
+     * @return string|Response
+     */
     public function actionDeleteRequest()
     {
         if (Yii::$app->user->isGuest) {
@@ -132,8 +145,16 @@ class ProfileController extends Controller
         return 'Удаленно';
     }
 
+    /**
+     * Установка статуса "решена" заявки
+     * доступно только администратору
+     * @return Response
+     */
     public function actionAcceptRequest()
     {
+        if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin != 1) {
+            return $this->goHome();
+        }
         $model = new AcceptRequestForm();
         if ($model->load(Yii::$app->request->post())) {
             $model->image = UploadedFile::getInstance($model, 'image');
@@ -155,6 +176,11 @@ class ProfileController extends Controller
         return $this->redirect('/profile');
     }
 
+    /**
+     * Установка статуса "Отклонена" заявки
+     * доступно только администратору
+     * @return string|Response
+     */
     public function actionRejectRequest()
     {
         if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin != 1) {

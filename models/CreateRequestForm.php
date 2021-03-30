@@ -39,13 +39,16 @@ class CreateRequestForm extends Model
                 ],
                 'required'
             ],
+            ['title', 'required', 'message' => 'Введите заголовок'],
+            ['description', 'required', 'message' => 'Введите описание'],
+            ['criterion', 'required', 'message' => 'Выберете критерий'],
+            ['image', 'required', 'message' => 'Укажите фото'],
             ['image', 'validateImage'],
         ];
     }
 
     /**
-     * Validates the password.
-     * This method serves as the inline validation for password.
+     * Валидация изображения
      *
      * @param string $attribute the attribute currently being validated
      * @param array $params the additional name-value pairs given in the rule

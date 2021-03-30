@@ -9,6 +9,7 @@ use app\repository\UserRepository;
 use Yii;
 use yii\web\Controller;
 use app\models\LoginForm;
+use yii\web\Response;
 
 class MainController extends Controller
 {
@@ -25,6 +26,10 @@ class MainController extends Controller
         ];
     }
 
+    /**
+     * Главная страница
+     * @return string
+     */
     public function actionIndex()
     {
         return $this->render('index', [
@@ -33,11 +38,19 @@ class MainController extends Controller
         ]);
     }
 
+    /**
+     * Вывод количества решённых заявок
+     * @return string
+     */
     public function actionCountResolvRequest()
     {
         return RequestRepository::getCountRequests(['status_id' => 2]);
     }
 
+    /**
+     * Страница "авторизация"
+     * @return string|Response
+     */
     public function actionLogin()
     {
         if (!Yii::$app->user->isGuest) {
@@ -55,12 +68,22 @@ class MainController extends Controller
         ]);
     }
 
+    /**
+     * Страница "выход"
+     * log out пользователя
+     * Переадресация
+     * @return Response
+     */
     public function actionLogout()
     {
         Yii::$app->user->logout();
         return $this->goHome();
     }
 
+    /**
+     * Страница "Регистрациия"
+     * @return string|Response
+     */
     public function actionRegistration()
     {
         $model = new RegistrationForm();

@@ -7,9 +7,9 @@ namespace app\entity;
 use yii\db\ActiveRecord;
 
 /**
- * Class DirCriterion
- * @property int id
- * @property string criterion
+ * Таблица dir_criterion справочник критериев
+ * @property int id идентификатор
+ * @property string criterion текст критерия
  * @package app\entity
  */
 class DirCriterion extends ActiveRecord

@@ -16,31 +16,26 @@ class RegistrationForm extends Model
     public $accept_personal;
 
 
-
     public function attributeLabels()
     {
         return [
             'accept_personal' => 'Подтверждение на обработку персональных данных',
         ];
     }
+
     /**
      * @return array the validation rules.
      */
     public function rules()
     {
         return [
-            [
-                [
-                    'last_name',
-                    'first_name',
-                    'email',
-                    'username',
-                    'repeat_password',
-                    'password',
-                    'accept_personal'
-                ],
-                'required'
-            ],
+            ['last_name', 'required', 'message' => 'Заполните имя'],
+            ['first_name', 'required', 'message' => 'Заполните фамилию'],
+            ['email', 'required', 'message' => 'Заполните электронную почту'],
+            ['username', 'required', 'message' => 'Заполните логин'],
+            ['password', 'required', 'message' => 'Придумайте пароль'],
+            ['repeat_password', 'required', 'message' => 'Повторите пароль'],
+            ['accept_personal', 'required', 'message' => 'Подтвертиде обработку персональных данных'],
             ['middle_name', 'default'],
             ['accept_personal', 'validateAccept'],
             ['password', 'validatePassword'],
@@ -49,6 +44,11 @@ class RegistrationForm extends Model
         ];
     }
 
+    /**
+     * Валидация пароля
+     * @param $attribute
+     * @param $params
+     */
     public function validatePassword($attribute, $params)
     {
         if (!$this->hasErrors()) {
@@ -58,6 +58,12 @@ class RegistrationForm extends Model
         }
     }
 
+    /**
+     * Валидация логина
+     * Логин должен быть уникален
+     * @param $attribute
+     * @param $params
+     */
     public function validateUsername($attribute, $params)
     {
         if (!$this->hasErrors()) {
@@ -67,6 +73,12 @@ class RegistrationForm extends Model
         }
     }
 
+    /**
+     * Валидация почты
+     * Почта должена быть уникальна
+     * @param $attribute
+     * @param $params
+     */
     public function validateEmail($attribute, $params)
     {
         if (!$this->hasErrors()) {
@@ -76,6 +88,11 @@ class RegistrationForm extends Model
         }
     }
 
+    /**
+     * Валидация пользовательского соглашения
+     * @param $attribute
+     * @param $params
+     */
     public function validateAccept($attribute, $params)
     {
         if (!$this->hasErrors()) {

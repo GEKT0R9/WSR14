@@ -15,7 +15,7 @@ class DirectoryForm extends Model
     public function rules()
     {
         return [
-            ['text', 'required'],
+            ['text', 'required', 'message' => 'Поле не может быть пустым'],
         ];
     }
 }

@@ -7,21 +7,24 @@ use yii\grid\GridView;
 use yii\helpers\Html;
 use app\assets\DirAsset;
 
-$this->title = 'About';
+$this->title = $title;
 
 DirAsset::register($this);
 ?>
 <?php $form = ActiveForm::begin(['id' => 'sub_form']); ?>
-<?= $form->field($model, 'text')->textInput(['class' => 'input', 'placeholder' => 'Введите статус'])->label(false)->error(false) ?>
+<?=
+$form->field($model, 'text')
+    ->textInput(['class' => 'input', 'placeholder' => 'Введите статус'])
+    ->label(false)
+    ->error(false)
+?>
 <?= $form->errorSummary($model, ['class' => 'error']); ?>
 <?= Html::submitButton('Добавить', ['class' => 'butt']) ?>
 <?php ActiveForm::end(); ?>
 <div class="table">
-
     <?= GridView::widget([
         'dataProvider' => $provider,
         'columns' => $columns,
         'summary' => "",
     ]) ?>
-
 </div>

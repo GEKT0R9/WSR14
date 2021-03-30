@@ -3,9 +3,20 @@
 namespace app\repository;
 
 use app\entity\Users;
+use yii\db\ActiveRecord;
 
 class UserRepository
 {
+    /**
+     * Созданеи пользователя
+     * @param string $last_name Фамилия
+     * @param string $first_name имя
+     * @param string|null $middle_name отчетсво (не обязательно)
+     * @param string $username логин
+     * @param string $email электронная почта
+     * @param string $password пароль
+     * @return Users
+     */
     public static function createUser(
         $last_name,
         $first_name,
@@ -25,6 +36,11 @@ class UserRepository
         return $new_user;
     }
 
+    /**
+     * Получение пользователя по where
+     * @param array $where запрос
+     * @return array|ActiveRecord|null
+     */
     public static function findOneUser($where) {
         return Users::find()->where($where)->one();
     }

@@ -37,17 +37,14 @@ AppAsset::register($this);
             'class' => 'header',
         ],
     ]);
-    $items = [
-        Yii::$app->user->isGuest ? (
-        ['label' => 'Авторизация', 'url' => ['/main/login']]
-        ) : (
-        ['label' => 'Профиль', 'url' => ['/profile']]
-        )
-    ];
+    $items = [];
     if (Yii::$app->user->identity->is_admin == 1) {
         $items[] = ['label' => 'Статусы', 'url' => ['/directory', 'type' => 'status']];
         $items[] = ['label' => 'Критерии', 'url' => ['/directory', 'type' => 'criterion']];
     }
+    $items[] = Yii::$app->user->isGuest
+        ? (['label' => 'Авторизация', 'url' => ['/main/login']])
+        : (['label' => 'Профиль', 'url' => ['/profile']]);
     echo Nav::widget([
         'options' => ['class' => 'ul'],
         'items' => $items,

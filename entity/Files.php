@@ -7,12 +7,12 @@ namespace app\entity;
 use yii\db\ActiveRecord;
 
 /**
- * Class Files
- * @property int id
- * @property string name
- * @property string file_content
- * @property int size
- * @property string permission
+ * Таблица файлов
+ * @property int id идентификатор
+ * @property string name название файла
+ * @property string file_content контент файла
+ * @property int size размер файла
+ * @property string permission разрешение файла
  * @package app\entity
  */
 class Files extends ActiveRecord

@@ -4,9 +4,14 @@ namespace app\repository;
 
 use app\entity\DirCriterion;
 use app\entity\DirStatus;
+use yii\db\ActiveQuery;
 
 class DirRepository
 {
+    /**
+     * Получения статусов в виде массива
+     * @return array
+     */
     public static function getStatusAsArray() {
         $status = [];
         foreach (DirStatus::find()->asArray()->all() as $key => $value) {
@@ -15,6 +20,10 @@ class DirRepository
         return $status;
     }
 
+    /**
+     * Получение критериев в виде массива
+     * @return array
+     */
     public static function getCriterionAsArray() {
         $criterion = [];
         foreach (DirCriterion::find()->asArray()->all() as $key => $value) {
@@ -23,14 +32,27 @@ class DirRepository
         return $criterion;
     }
 
+    /**
+     * Получения таблицы статусов
+     * @return ActiveQuery
+     */
     public static function getFindStatus() {
         return DirStatus::find();
     }
 
+    /**
+     * Получение таблици критериев
+     * @return ActiveQuery
+     */
     public static function getFindCriterion() {
         return DirCriterion::find();
     }
 
+    /**
+     * Созадние критерия
+     * @param string $criterion название критерия
+     * @return DirCriterion
+     */
     public static function getCreateCriterion($criterion) {
         $new_row = new DirCriterion;
         $new_row->criterion = $criterion;
@@ -38,6 +60,11 @@ class DirRepository
         return $new_row;
     }
 
+    /**
+     * Создание статуса
+     * @param string $status название статуса
+     * @return DirStatus
+     */
     public static function getCreateStatus($status) {
         $new_row = new DirStatus;
         $new_row->status = $status;

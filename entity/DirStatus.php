@@ -7,9 +7,9 @@ namespace app\entity;
 use yii\db\ActiveRecord;
 
 /**
- * Class DirStatus
- * @property int id
- * @property string status
+ * Таблица dir_status справочник критериев
+ * @property int id идентификатор
+ * @property string status текст статуса
  * @package app\entity
  */
 class DirStatus extends ActiveRecord

@@ -9,4 +9,7 @@ class FormAsset extends AppAsset
     public $css = [
         'css/auth/main.css',
     ];
+    public $js = [
+        'js/form.js'
+    ];
 }

@@ -4,7 +4,7 @@
 
 use app\assets\IndexAsset;
 
-$this->title = 'My Yii Application';
+$this->title = 'Главная';
 IndexAsset::register($this);
 ?>
 <div class="content">
