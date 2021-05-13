@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\entity\StatusOrder;
 use app\models\AcceptRequestForm;
 use app\models\CreateRequestForm;
 use app\models\ProfileForm;
@@ -53,7 +54,7 @@ class ProfileController extends Controller
             $options['status_id'] = $_SESSION['filt'];
         }
 
-        if ($user->is_admin != 1) {
+        if (!$user->isAvailable('admin')) {
             $options['create_user_id'] = Yii::$app->user->id;
         }
         $user_requests = RequestRepository::getRequestsFind(['and', $options]);
@@ -62,18 +63,18 @@ class ProfileController extends Controller
         $status = DirRepository::getStatusAsArray();
         $status[0] = 'Все';
         ksort($status);
-        $criterion = DirRepository::getCriterionAsArray();
         $requests = [];
         foreach ($user_requests as $key => $value) {
             $requests[$key]['id'] = $value->id;
             $requests[$key]['title'] = $value->title;
             $requests[$key]['description'] = $value->description;
-            $requests[$key]['criterion'] = $criterion[$value->criterion_id];
-            $requests[$key]['status'] = $status[$value->status_id];
+            $requests[$key]['criterion'] = $value->criteria[0]->criterion;
+            $requests[$key]['type_id'] = $value->status->type_id;
+            $requests[$key]['status'] = $value->status->title;
             $requests[$key]['date'] = date('d.m.Y', strtotime($value->date));
-            $requests[$key]['img'] = FileRepository::getContentFileById($value->before_img_id);;
-            $requests[$key]['allow'] = ($user->is_admin == 1 && $value->status_id != 2 && $value->status_id != 3);
-            $requests[$key]['allow_del'] = ($value->status_id != 2 && $value->status_id != 3);
+            $requests[$key]['img'] = $value->before_img->file_content;;
+            $requests[$key]['allow'] = ($user->isAvailable('admin'));
+            $requests[$key]['allow_del'] = true;
         }
 
         return $this->render('index', [
@@ -102,21 +103,19 @@ class ProfileController extends Controller
         if ($model->load(Yii::$app->request->post())) {
             $model->image = UploadedFile::getInstance($model, 'image');
             if ($model->validate()) {
-
                 $img = FileRepository::createFile(
                     $model->image->name,
                     base64_encode(file_get_contents($model->image->tempName)),
                     $model->image->size,
                     $model->image->type
                 );
-
                 RequestRepository::createRequest(
                     $model->title,
                     $model->description,
                     $model->criterion,
                     $img->id,
                     null,
-                    1,
+                    (StatusOrder::find()->where(['order' => 1])->one())->id,
                     Yii::$app->user->id
                 );
 
@@ -152,7 +151,7 @@ class ProfileController extends Controller
      */
     public function actionAcceptRequest()
     {
-        if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin != 1) {
+        if (Yii::$app->user->isGuest || !Yii::$app->user->identity->isAvailable('admin')) {
             return $this->goHome();
         }
         $model = new AcceptRequestForm();
@@ -168,7 +167,7 @@ class ProfileController extends Controller
                 );
 
                 $request = RequestRepository::getRequestsFind(['id' => $model->id])->one();
-                $request->status_id = 2;
+                $request->status_id = StatusOrder::find()->where(['order' => $request->status->order + 1])->one()->id;
                 $request->after_img_id = $img->id;
                 $request->save();
             }
@@ -183,12 +182,33 @@ class ProfileController extends Controller
      */
     public function actionRejectRequest()
     {
-        if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin != 1) {
+        if (Yii::$app->user->isGuest || !Yii::$app->user->identity->isAvailable('admin')) {
             return $this->goHome();
         }
         $post = Yii::$app->request->post();
         $request = RequestRepository::getRequestsFind(['id' => $post['id']])->one();
-        $request->status_id = 3;
+        if ($request->status->order == 2) {
+            $request->status_id = StatusOrder::find()->where(['type_id' => 5])->one()->id;
+        } else {
+            $request->status_id = StatusOrder::find()->where(['order' => $request->status->order - 1])->one()->id;
+        }
+        $request->save();
+        return 'Статус изменён';
+    }
+
+    /**
+     * Установка статуса "Отклонена" заявки
+     * доступно только администратору
+     * @return string|Response
+     */
+    public function actionStatusUpRequest()
+    {
+        if (Yii::$app->user->isGuest || !Yii::$app->user->identity->isAvailable('admin')) {
+            return $this->goHome();
+        }
+        $post = Yii::$app->request->post();
+        $request = RequestRepository::getRequestsFind(['id' => $post['id']])->one();
+        $request->status_id = StatusOrder::find()->where(['order' => $request->status->order + 1])->one()->id;
         $request->save();
         return 'Статус изменён';
     }

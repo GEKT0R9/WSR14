@@ -35,17 +35,18 @@ class DirectoryController extends Controller
      */
     public function actionIndex($type)
     {
-        if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin != 1) {
+        if (Yii::$app->user->isGuest || !Yii::$app->user->identity->isAvailable('admin')) {
             return $this->goHome();
         }
         $query = null;
         $columns = [];
         $columns[] = 'id';
         $buttons = [];
-        $addRowFor = null;
+        $addRowFor = false;
         $title = '';
         switch ($type) {
             case 'criterion':
+                $addRowFor = true;
                 $query = DirRepository::getFindCriterion();
                 $title = 'Критерий';
                 $columns[] = [
@@ -59,21 +60,37 @@ class DirectoryController extends Controller
                         ['class' => 'del']
                     );
                 };
+                $columns[] = [
+                    'class' => 'yii\grid\ActionColumn',
+                    'header' => 'Действия',
+                    'headerOptions' => ['width' => '80'],
+                    'template' => '{delete}{link}',
+                    'buttons' => $buttons,
+                ];
                 break;
             case 'status':
                 $query = DirRepository::getFindStatus();
                 $title = 'Статус';
                 $columns[] = [
-                    'attribute' => 'status',
-                    'label' => 'Статус',
+                    'attribute' => 'title',
+                    'label' => 'Название',
                 ];
-                $buttons['delete'] = function ($url, $model, $key) {
-                    return Html::a(
-                        'Удалить',
-                        Url::to(['delete', 'id' => $key, 'table' => 'status']),
-                        ['class' => 'del']
-                    );
-                };
+                $columns[] = [
+                    'attribute' => 'description',
+                    'label' => 'Описание',
+                ];
+                break;
+            case 'access':
+                $query = DirRepository::getFindAccess();
+                $title = 'Доступы';
+                $columns[] = [
+                    'attribute' => 'access',
+                    'label' => 'Название',
+                ];
+                $columns[] = [
+                    'attribute' => 'description',
+                    'label' => 'Описание',
+                ];
                 break;
             default:
                 return var_dump($type);
@@ -90,13 +107,7 @@ class DirectoryController extends Controller
                     break;
             }
         }
-        $columns[] = [
-            'class' => 'yii\grid\ActionColumn',
-            'header' => 'Действия',
-            'headerOptions' => ['width' => '80'],
-            'template' => '{delete}{link}',
-            'buttons' => $buttons,
-        ];
+
         $provider = new ActiveDataProvider(
             [
                 'query' => $query,
@@ -109,6 +120,7 @@ class DirectoryController extends Controller
             'model' => $model,
             'provider' => $provider,
             'columns' => $columns,
+            'add_row_for' => $addRowFor,
             'title' => 'Справочник "' . $title . '"'
         ]);
     }
@@ -123,7 +135,7 @@ class DirectoryController extends Controller
      */
     public function actionDelete($id, $table)
     {
-        if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin != 1) {
+        if (Yii::$app->user->isGuest || !Yii::$app->user->identity->isAvailable('admin')) {
             return $this->goHome();
         }
         switch ($table) {

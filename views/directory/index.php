@@ -11,6 +11,7 @@ $this->title = $title;
 
 DirAsset::register($this);
 ?>
+<? if($add_row_for): ?>
 <?php $form = ActiveForm::begin(['id' => 'sub_form']); ?>
 <?=
 $form->field($model, 'text')
@@ -21,6 +22,7 @@ $form->field($model, 'text')
 <?= $form->errorSummary($model, ['class' => 'error']); ?>
 <?= Html::submitButton('Добавить', ['class' => 'butt']) ?>
 <?php ActiveForm::end(); ?>
+<?endif;?>
 <div class="table">
     <?= GridView::widget([
         'dataProvider' => $provider,

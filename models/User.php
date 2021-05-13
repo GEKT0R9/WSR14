@@ -16,7 +16,6 @@ use yii\web\IdentityInterface;
  * @property string username
  * @property string password
  * @property string email
- * @property bool is_admin
  * @package app\models
  */
 class User extends BaseObject implements IdentityInterface
@@ -28,7 +27,6 @@ class User extends BaseObject implements IdentityInterface
     public $username;
     public $password;
     public $email;
-    public $is_admin;
 
     /**
      * {@inheritdoc}
@@ -101,5 +99,19 @@ class User extends BaseObject implements IdentityInterface
     public function validatePassword($password)
     {
         return password_verify($password, $this->password);
+    }
+
+    public function isAvailable($access){
+        $result = false;
+        $user = UserRepository::findOneUser(['id' => $this->id]);
+        foreach ($user->roles as $role){
+            foreach ($role->accesses as $one_access){
+                if ($one_access->access === $access){
+                    $result = true;
+                    break;
+                }
+            }
+        }
+        return $result;
     }
 }

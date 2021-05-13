@@ -13,8 +13,13 @@ $(document).ready(function () {
     $('.problem').click(function () {
         if($(this).find('.info_menu').length > 0){
             let id = $(this).attr('id').split('_')
-            $('.yes > input').val(id[id.length - 1]);
-            $('.hidden_id').val(id[id.length - 1]);
+            console.log(id);
+            $('.yes > input').val(id[1]);
+            $('.hidden_id').val(id[1]);
+            $('#status_type').val(id[2]);
+            if (id[2] !== "3"){
+                $('#accept_form').addClass('hidden');
+            }
             $('.content > .info_menu').replaceWith($(this).find('.info_menu').clone());
         }
     })
@@ -24,6 +29,15 @@ $(document).ready(function () {
     })
 
     $('#accept_yes').click(function () {
+        if ($('#status_type').val() !== "3"){
+            $.post(
+                '/profile/status-up-request',
+                {id: $('.hidden_id').val()},
+                function (data) {
+                    location.reload();
+                }
+            );
+        }
         $('#accept_form').submit();
     })
 

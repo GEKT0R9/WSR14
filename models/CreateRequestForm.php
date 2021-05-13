@@ -41,7 +41,7 @@ class CreateRequestForm extends Model
             ],
             ['title', 'required', 'message' => 'Введите заголовок'],
             ['description', 'required', 'message' => 'Введите описание'],
-            ['criterion', 'required', 'message' => 'Выберете критерий'],
+            ['criterion', 'required', 'message' => 'Выберете критерии'],
             ['image', 'required', 'message' => 'Укажите фото'],
             ['image', 'validateImage'],
         ];

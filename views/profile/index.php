@@ -36,10 +36,10 @@ ProfileAsset::register($this);
         <?= $form->field($model, 'filt')->dropDownList($status, ['id' => 'filt'])->label(false) ?>
         <?php ActiveForm::end(); ?>
         <? foreach ($requests as $key => $value) : ?>
-            <label class="problem" for="info_menu" id="problem_<?= $value['id'] ?>">
+            <label class="problem" for="info_menu" id="problem_<?= $value['id'] ?>_<?= $value['type_id'] ?>">
                 <h2 class="title"><?= $value['title'] ?></h2>
                 <p class="description"><?= $value['description'] ?></p>
-                <h3 class="status"><?= $value['status'] ?></h3>
+                <h3 class="status" ><?= $value['status'] ?></h3>
                 <p class="category"><?= $value['criterion'] ?></p>
                 <p class="date"><?= $value['date'] ?></p>
                 <div class="hidden">
@@ -84,7 +84,7 @@ ProfileAsset::register($this);
             <p class="category_menu">Категория</p>
             <p class="date_menu"></p>
         </div>
-        <? if (Yii::$app->user->identity->is_admin == 1): ?>
+        <? if (Yii::$app->user->identity->isAvailable('admin')): ?>
             <div class="status_but">
                 <label for="accept">Принять</label>
                 <label for="reject">Отменить</label>
@@ -115,7 +115,7 @@ ProfileAsset::register($this);
         <p id="file_name"></p>
         <?= $form->field($model_accept, 'id')->hiddenInput(['class' => 'hidden_id'])->label(false) ?>
         <?php ActiveForm::end(); ?>
-        <p></p>
+        <input id="status_type" type="hidden" value="">
         <a id="accept_yes" class="yes"><input type="hidden" value="">Принять</a>
         <label for="accept" class="no">Отмена</label>
     </div>

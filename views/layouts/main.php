@@ -31,16 +31,32 @@ AppAsset::register($this);
 <div class="wrap">
     <?php
     NavBar::begin([
-        'brandLabel' => "Сделаем мир лучше!",
+        'brandLabel' => "Сделаем город лучше!",
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
             'class' => 'header',
         ],
     ]);
     $items = [];
-    if (Yii::$app->user->identity->is_admin == 1) {
-        $items[] = ['label' => 'Статусы', 'url' => ['/directory', 'type' => 'status']];
-        $items[] = ['label' => 'Критерии', 'url' => ['/directory', 'type' => 'criterion']];
+    if (!Yii::$app->user->isGuest) {
+        if (Yii::$app->user->identity->isAvailable('admin')) {
+            $items[] = [
+                'label' => 'Справочники',
+                'items' => [
+                    ['label' => 'Статусы', 'url' => ['/directory', 'type' => 'status']],
+                    ['label' => 'Критерии', 'url' => ['/directory', 'type' => 'criterion']],
+                    ['label' => 'Доступы', 'url' => ['/directory', 'type' => 'access']]
+                ]
+            ];
+            $items[] = [
+                'label' => 'Настройки',
+                'items' => [
+                    ['label' => 'Роли', 'url' => ['/settings/roles']],
+                    ['label' => 'Бизнесс процесс', 'url' => ['/settings/status']],
+                ]
+            ];
+//        $items[] = ['label' => 'Заявки', 'url' => ['/directory', 'type' => 'criterion']];
+        }
     }
     $items[] = Yii::$app->user->isGuest
         ? (['label' => 'Авторизация', 'url' => ['/main/login']])
@@ -62,7 +78,7 @@ AppAsset::register($this);
 </div>
 
 <footer>
-    <p>2021 год, NoFantasy/2 все права защищены©</p>
+    <p>2021 год, NoFantasy/4 все права защищены©</p>
 </footer>
 
 <?php $this->endBody() ?>

@@ -13,10 +13,15 @@ use yii\db\ActiveRecord;
  * @property string username логин пользователя
  * @property string email электронная почта
  * @property string password пароль
- * @property int is_admin идентификатор администратора
+ *
+ * @property Roles[] roles роли
  * @package app\entity
  */
 class Users extends ActiveRecord
 {
-
+    public function getRoles()
+    {
+        return $this->hasMany(Roles::className(), ['id' => 'role_id'])
+            ->viaTable('users_to_role',['user_id' => 'id']);
+    }
 }

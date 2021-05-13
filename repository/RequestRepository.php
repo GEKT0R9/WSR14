@@ -3,6 +3,8 @@
 namespace app\repository;
 
 use app\entity\Requests;
+use app\entity\RequestToCriterion;
+use app\entity\StatusOrder;
 use Throwable;
 use yii\db\ActiveQuery;
 use yii\db\StaleObjectException;
@@ -15,24 +17,21 @@ class RequestRepository
      */
     public static function getFourRequestsForMain() {
         $user_requests = Requests::find()
-            ->where(['status_id' => 2])
+            ->where(['status_id' => StatusOrder::find()->where(['type_id' => 4])->one()->id])
             ->orderBy(['date' => SORT_DESC])
             ->limit(4)
             ->all();
-
-        $status = DirRepository::getStatusAsArray();
-        $criterion = DirRepository::getCriterionAsArray();
 
         $requests = [];
         foreach ($user_requests as $key => $value) {
             $requests[$key]['id'] = $value->id;
             $requests[$key]['title'] = $value->title;
             $requests[$key]['description'] = $value->description;
-            $requests[$key]['criterion'] = $criterion[$value->criterion_id];
-            $requests[$key]['status'] = $status[$value->status_id];
+            $requests[$key]['criterion'] = $value->criteria[0]->criterion;
+            $requests[$key]['status'] = $value->status->title;
             $requests[$key]['date'] = date('d.m.Y', strtotime($value->date));
-            $requests[$key]['before_img'] = FileRepository::getContentFileById($value->before_img_id);
-            $requests[$key]['after_img'] = FileRepository::getContentFileById($value->after_img_id);
+            $requests[$key]['before_img'] = $value->before_img->file_content;
+            $requests[$key]['after_img'] = $value->after_img->file_content;
         }
         return $requests;
     }
@@ -59,7 +58,7 @@ class RequestRepository
      * Создание заявки
      * @param string $title заголовок
      * @param string $description описание
-     * @param int $criterion_id идентификатор кримтерия
+     * @param int[] $criteria идентификаторы критериев
      * @param int $before_img_id идентификатор фото "до"
      * @param int|null $after_img_id идентификатор фото "после" (Не обязательно)
      * @param int $status_id идентификатор статуса
@@ -69,7 +68,7 @@ class RequestRepository
     public static function createRequest(
         $title,
         $description,
-        $criterion_id,
+        $criteria,
         $before_img_id,
         $after_img_id,
         $status_id,
@@ -78,12 +77,19 @@ class RequestRepository
         $request = new Requests;
         $request->title = $title;
         $request->description = $description;
-        $request->criterion_id = $criterion_id;
         $request->before_img_id = $before_img_id;
         $request->after_img_id = $after_img_id;
         $request->status_id = $status_id;
         $request->create_user_id = $create_user_id;
         $request->save();
+
+        foreach ($criteria as $criterion){
+            $rtc = new RequestToCriterion;
+            $rtc->request_id = $request->id;
+            $rtc->criterion_id = $criterion;
+            $rtc->save();
+        }
+
         return $request;
     }
 

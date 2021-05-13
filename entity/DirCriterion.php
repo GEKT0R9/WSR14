@@ -14,8 +14,5 @@ use yii\db\ActiveRecord;
  */
 class DirCriterion extends ActiveRecord
 {
-    public static function className()
-    {
-        return 'dir_criterion';
-    }
+
 }

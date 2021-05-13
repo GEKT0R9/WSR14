@@ -1,6 +1,6 @@
 .header {
     border-radius: 0;
-    background: #3a3259;
+    background: #596e79;
 }
 
 .ul {
@@ -28,7 +28,7 @@
 }
 
 .header a {
-    color: #00e0d0;
+    color: #fff;
 }
 
 .ul li a {
@@ -37,8 +37,7 @@
 }
 
 .ul li a:hover {
-    color: #93dfda;
-    border-bottom: 1px solid #00e0d0;
+    border-bottom: 1px solid #fff;
 }
 
 .nav>li>a:focus {

@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\entity\Requests;
+use app\entity\StatusOrder;
 use app\models\RegistrationForm;
 use app\repository\RequestRepository;
 use app\repository\UserRepository;
@@ -34,7 +35,9 @@ class MainController extends Controller
     {
         return $this->render('index', [
             'requests' => RequestRepository::getFourRequestsForMain(),
-            'count' => Requests::find()->where(['status_id' => 2])->count()
+            'count' => Requests::find()
+                ->where(['status_id' => StatusOrder::find()->where(['type_id' => 4])->one()->id])
+                ->count()
         ]);
     }
 
@@ -44,7 +47,9 @@ class MainController extends Controller
      */
     public function actionCountResolvRequest()
     {
-        return RequestRepository::getCountRequests(['status_id' => 2]);
+        return RequestRepository::getCountRequests([
+            'status_id' => StatusOrder::find()->where(['type_id' => 4])->one()->id
+        ]);
     }
 
     /**

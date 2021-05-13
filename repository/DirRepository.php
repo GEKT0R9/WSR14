@@ -2,8 +2,10 @@
 
 namespace app\repository;
 
+use app\entity\Access;
 use app\entity\DirCriterion;
-use app\entity\DirStatus;
+use app\entity\DirStatusType;
+use app\entity\StatusOrder;
 use yii\db\ActiveQuery;
 
 class DirRepository
@@ -14,8 +16,8 @@ class DirRepository
      */
     public static function getStatusAsArray() {
         $status = [];
-        foreach (DirStatus::find()->asArray()->all() as $key => $value) {
-            $status[$value['id']] = $value['status'];
+        foreach (StatusOrder::find()->asArray()->all() as $key => $value) {
+            $status[$value['id']] = $value['title'];
         }
         return $status;
     }
@@ -37,7 +39,7 @@ class DirRepository
      * @return ActiveQuery
      */
     public static function getFindStatus() {
-        return DirStatus::find();
+        return DirStatusType::find();
     }
 
     /**
@@ -46,6 +48,14 @@ class DirRepository
      */
     public static function getFindCriterion() {
         return DirCriterion::find();
+    }
+
+    /**
+     * Получение таблици доступов
+     * @return ActiveQuery
+     */
+    public static function getFindAccess() {
+        return Access::find();
     }
 
     /**
@@ -63,11 +73,11 @@ class DirRepository
     /**
      * Создание статуса
      * @param string $status название статуса
-     * @return DirStatus
+     * @return DirStatusType
      */
     public static function getCreateStatus($status) {
-        $new_row = new DirStatus;
-        $new_row->status = $status;
+        $new_row = new DirStatusType;
+        $new_row->title = $status;
         $new_row->save();
         return $new_row;
     }

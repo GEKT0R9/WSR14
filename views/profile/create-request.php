@@ -33,7 +33,7 @@ FormAsset::register($this);
     ?>
     <?=
     $form->field($model, 'criterion')
-        ->dropDownList($criterion, ['class' => 'select'])
+        ->dropDownList($criterion, ['class' => 'select', 'multiple' => 'true'])
         ->label(false)
         ->error(false)
     ?>

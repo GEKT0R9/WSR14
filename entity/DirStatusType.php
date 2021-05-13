@@ -9,13 +9,10 @@ use yii\db\ActiveRecord;
 /**
  * Таблица dir_status справочник критериев
  * @property int id идентификатор
- * @property string status текст статуса
+ * @property string title текст статуса
  * @package app\entity
  */
-class DirStatus extends ActiveRecord
+class DirStatusType extends ActiveRecord
 {
-    public static function className()
-    {
-        return 'dir_status';
-    }
+
 }
