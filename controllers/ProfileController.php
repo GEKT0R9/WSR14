@@ -67,16 +67,23 @@ class ProfileController extends Controller
         ksort($status);
         $requests = [];
         foreach ($user_requests as $key => $value) {
+            $criteria = [];
+            foreach ($value->criteria as $item) {
+                $criteria[] = $item->criterion;
+            }
             $requests[$key]['id'] = $value->id;
             $requests[$key]['title'] = $value->title;
             $requests[$key]['description'] = $value->description;
-            $requests[$key]['criterion'] = $value->criteria[0]->criterion;
+            $requests[$key]['criterion'] = implode(', ', $criteria);
             $requests[$key]['type_id'] = $value->status->type_id;
             $requests[$key]['status'] = $value->status->title;
             $requests[$key]['date'] = date('d.m.Y', strtotime($value->date));
-            $requests[$key]['img'] = $value->before_img->file_content;;
-            $requests[$key]['allow'] = ($user->isAvailable('admin'));
-            $requests[$key]['allow_del'] = true;
+            $requests[$key]['before_img'] = $value->before_img->file_content;
+            $requests[$key]['after_img'] = $value->after_img->file_content;
+            $requests[$key]['allow'] =
+                ($user->isAvailable('status_' . $value->status->id))
+                && ($value->status->type_id != 4 || $value->status->type_id != 5);
+            $requests[$key]['allow_del'] = ($user->isAvailable('del_request') && $value->status->type_id == 1);
         }
 
         return $this->render('index', [
@@ -138,7 +145,7 @@ class ProfileController extends Controller
      */
     public function actionDeleteRequest()
     {
-        if (Yii::$app->user->isGuest) {
+        if (Yii::$app->user->isGuest || !Yii::$app->user->identity->isAvailable('del_request')) {
             return $this->goHome();
         }
         $post = Yii::$app->request->post();
@@ -153,28 +160,31 @@ class ProfileController extends Controller
      */
     public function actionAcceptRequest()
     {
-        if (Yii::$app->user->isGuest || !Yii::$app->user->identity->isAvailable('admin')) {
+        if (Yii::$app->user->isGuest) {
             return $this->goHome();
         }
         $model = new AcceptRequestForm();
         if ($model->load(Yii::$app->request->post())) {
-            $model->image = UploadedFile::getInstance($model, 'image');
-            if ($model->validate()) {
+            $request = RequestRepository::getRequestsFind(['id' => $model->id])->one();
+            if (Yii::$app->user->identity->isAvailable('status_' . $request->status->id)) {
+                $model->image = UploadedFile::getInstance($model, 'image');
+                if ($model->validate()) {
 
-                $img = FileRepository::createFile(
-                    $model->image->name,
-                    base64_encode(file_get_contents($model->image->tempName)),
-                    $model->image->size,
-                    $model->image->type
-                );
+                    $img = FileRepository::createFile(
+                        $model->image->name,
+                        base64_encode(file_get_contents($model->image->tempName)),
+                        $model->image->size,
+                        $model->image->type
+                    );
 
-                $request = RequestRepository::getRequestsFind(['id' => $model->id])->one();
-                $request->status_id = StatusOrder::find()->where(['order' => $request->status->order + 1])->one()->id;
-                $request->after_img_id = $img->id;
-                $request->save();
+                    $request->status_id = StatusOrder::find()->where(['order' => $request->status->order + 1])->one()->id;
+                    $request->after_img_id = $img->id;
+                    $request->save();
+                }
+                return $this->redirect('/profile');
             }
         }
-        return $this->redirect('/profile');
+        return $this->goHome();
     }
 
     /**
@@ -184,18 +194,21 @@ class ProfileController extends Controller
      */
     public function actionRejectRequest()
     {
-        if (Yii::$app->user->isGuest || !Yii::$app->user->identity->isAvailable('admin')) {
+        if (Yii::$app->user->isGuest) {
             return $this->goHome();
         }
         $post = Yii::$app->request->post();
         $request = RequestRepository::getRequestsFind(['id' => $post['id']])->one();
-        if ($request->status->order == 2) {
-            $request->status_id = StatusOrder::find()->where(['type_id' => 5])->one()->id;
-        } else {
-            $request->status_id = StatusOrder::find()->where(['order' => $request->status->order - 1])->one()->id;
+        if (Yii::$app->user->identity->isAvailable('status_' . $request->status->id)) {
+            if ($request->status->order == 2) {
+                $request->status_id = StatusOrder::find()->where(['type_id' => 5])->one()->id;
+            } else {
+                $request->status_id = StatusOrder::find()->where(['order' => $request->status->order - 1])->one()->id;
+            }
+            $request->save();
+            return 'Статус изменён';
         }
-        $request->save();
-        return 'Статус изменён';
+        return $this->goHome();
     }
 
     /**
@@ -205,13 +218,16 @@ class ProfileController extends Controller
      */
     public function actionStatusUpRequest()
     {
-        if (Yii::$app->user->isGuest || !Yii::$app->user->identity->isAvailable('admin')) {
+        if (Yii::$app->user->isGuest) {
             return $this->goHome();
         }
         $post = Yii::$app->request->post();
         $request = RequestRepository::getRequestsFind(['id' => $post['id']])->one();
-        $request->status_id = StatusOrder::find()->where(['order' => $request->status->order + 1])->one()->id;
-        $request->save();
-        return 'Статус изменён';
+        if (Yii::$app->user->identity->isAvailable('status_' . $request->status->id)) {
+            $request->status_id = StatusOrder::find()->where(['order' => $request->status->order + 1])->one()->id;
+            $request->save();
+            return 'Статус изменён';
+        }
+        return $this->goHome();
     }
 }

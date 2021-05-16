@@ -33,9 +33,9 @@ class DirectoryController extends Controller
      * @param string $type определяет таблицу для справочника
      * @return string|void|Response
      */
-    public function actionIndex($type)
+    public function actionIndex($type = null)
     {
-        if (Yii::$app->user->isGuest || !Yii::$app->user->identity->isAvailable('admin')) {
+        if (Yii::$app->user->isGuest) {
             return $this->goHome();
         }
         $query = null;
@@ -46,6 +46,9 @@ class DirectoryController extends Controller
         $title = '';
         switch ($type) {
             case 'criterion':
+                if (!Yii::$app->user->identity->isAvailable('dir_criteria')) {
+                    return $this->goHome();
+                }
                 $addRowFor = true;
                 $query = DirRepository::getFindCriterion();
                 $title = 'Критерий';
@@ -69,6 +72,9 @@ class DirectoryController extends Controller
                 ];
                 break;
             case 'status':
+                if (!Yii::$app->user->identity->isAvailable('dir_status_type')) {
+                    return $this->goHome();
+                }
                 $query = DirRepository::getFindStatus();
                 $title = 'Статус';
                 $columns[] = [
@@ -81,6 +87,9 @@ class DirectoryController extends Controller
                 ];
                 break;
             case 'access':
+                if (!Yii::$app->user->identity->isAvailable('dir_access')) {
+                    return $this->goHome();
+                }
                 $query = DirRepository::getFindAccess();
                 $title = 'Доступы';
                 $columns[] = [
@@ -93,17 +102,26 @@ class DirectoryController extends Controller
                 ];
                 break;
             default:
-                return var_dump($type);
+                return $this->goHome();
                 break;
         }
         $model = new DirectoryForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             switch ($type) {
                 case 'criterion':
+                    if (!Yii::$app->user->identity->isAvailable('dir_add_criteria')) {
+                        return $this->goHome();
+                    }
                     DirRepository::getCreateCriterion($model->text);
                     break;
                 case 'status':
+                    if (!Yii::$app->user->identity->isAvailable('dir_add_status')) {
+                        return $this->goHome();
+                    }
                     DirRepository::getCreateStatus($model->text);
+                    break;
+                default:
+                    return $this->goHome();
                     break;
             }
         }
@@ -121,7 +139,8 @@ class DirectoryController extends Controller
             'provider' => $provider,
             'columns' => $columns,
             'add_row_for' => $addRowFor,
-            'title' => 'Справочник "' . $title . '"'
+            'title' => 'Справочник "' . $title . '"',
+            'button_text' => mb_strtolower($title)
         ]);
     }
 
@@ -135,24 +154,27 @@ class DirectoryController extends Controller
      */
     public function actionDelete($id, $table)
     {
-        if (Yii::$app->user->isGuest || !Yii::$app->user->identity->isAvailable('admin')) {
+        if (Yii::$app->user->isGuest) {
             return $this->goHome();
         }
         switch ($table) {
             case 'criterion':
+                if (!Yii::$app->user->identity->isAvailable('dir_del_criteria')) {
+                    return $this->goHome();
+                }
                 $query = DirRepository::getFindCriterion();
                 break;
             case 'status':
+                if (!Yii::$app->user->identity->isAvailable('dir_del_status_type')) {
+                    return $this->goHome();
+                }
                 $query = DirRepository::getFindStatus();
                 break;
             default:
-                return var_dump($table);
+                return $this->goHome();
                 break;
         }
         $query->where(['id' => $id])->one()->delete();
-        if ($table == 'criterion') {
-            RequestRepository::deleteRequests(['criterion_id' => $id]);
-        }
         return $this->redirect(Url::to(['/directory', 'type' => $table]));
     }
 }

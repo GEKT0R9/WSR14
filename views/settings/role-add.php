@@ -1,9 +1,11 @@
 <?php
 
+use app\assets\FormAsset;
 use yii\bootstrap\ActiveForm;
 use yii\helpers\Html;
 
 $this->title = $title;
+FormAsset::register($this);
 ?>
 <div class="form">
 
@@ -13,14 +15,14 @@ $this->title = $title;
 
     <?=
     $form->field($model, 'title')
-        ->textInput(['autofocus' => true, 'placeholder' => 'Введите название проблемы'])
+        ->textInput(['autofocus' => true, 'placeholder' => 'Введите название роли'])
         ->label(false)
         ->error(false)
     ?>
 
     <?=
     $form->field($model, 'description')
-        ->textarea(['placeholder' => 'Введите описание проблемы'])
+        ->textarea(['placeholder' => 'Введите описание роли'])
         ->label(false)
         ->error(false)
     ?>

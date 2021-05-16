@@ -1,0 +1,90 @@
+* {
+    padding: 0;
+    margin: 0;
+    font-family: Roboto;
+    user-select: none;
+    overflow-x: initial;
+    box-sizing: border-box;
+    scrollbar-width: none;
+}
+
+*::-webkit-scrollbar {
+    width: 0px;
+}
+
+.h1,
+.h2,
+.h3,
+h1,
+h2,
+h3 {
+    margin: 0;
+    line-height: initial;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
+a:hover {
+    text-decoration: none
+}
+
+
+.plate {
+    color: #fff;
+    padding: 15px 50px;
+    background: #c7b198;
+    width: 1000px;
+    display: grid;
+    grid-template-areas: "fio fio role" "login mail opt";
+    grid-template-columns: 1fr 3fr 2fr;
+    margin: 25px auto;
+    border-radius: 5px;
+}
+
+.plate > h1 {
+    font-size: 30px;
+    grid-area: fio;
+}
+
+.plate > h3 {
+    margin: 10px 0;
+    font-size: 20px;
+    grid-area: login;
+}
+
+.plate > h4 {
+    margin: 10px 0;
+    font-size: 20px;
+    grid-area: mail;
+}
+
+.plate > h2 {
+    font-size: 25px;
+    grid-area: role;
+}
+
+.plate > div {
+    margin: 10px 0;
+    font-size: 20px;
+    grid-area: opt;
+}
+
+.plate > div a{
+
+    text-decoration: none;
+    color: #fff;
+}
+
+.plate > div a:hover{
+    text-decoration: none;
+    color: #fff;
+    border-bottom: 1px solid white;
+}
+
+.tab{
+    margin: 0 15%;
+}
+

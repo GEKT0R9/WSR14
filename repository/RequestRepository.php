@@ -24,10 +24,14 @@ class RequestRepository
 
         $requests = [];
         foreach ($user_requests as $key => $value) {
+            $criteria = [];
+            foreach ($value->criteria as $item) {
+                $criteria[] = $item->criterion;
+            }
             $requests[$key]['id'] = $value->id;
             $requests[$key]['title'] = $value->title;
             $requests[$key]['description'] = $value->description;
-            $requests[$key]['criterion'] = $value->criteria[0]->criterion;
+            $requests[$key]['criterion'] = implode(', ', $criteria);
             $requests[$key]['status'] = $value->status->title;
             $requests[$key]['date'] = date('d.m.Y', strtotime($value->date));
             $requests[$key]['before_img'] = $value->before_img->file_content;

@@ -36,7 +36,7 @@ a {
 
 .input:focus,
 .input:hover {
-    border-bottom: 1px solid #00e0d0;
+    border-bottom: 1px solid #596e79;
 }
 
 .butt {
@@ -48,6 +48,7 @@ a {
     border: 1px solid white;
     transition: .2s border linear;
     background: none;
+    text-align: center;
     /* margin-bottom: 10px; */
     text-decoration: none;
     margin: 0 auto 10px;
@@ -55,16 +56,15 @@ a {
 }
 
 .butt:hover {
-    border: 1px solid #00e0d0;
+    border: 1px solid #596e79;
     text-decoration: none;
 }
 
 .table {
-    width: 700px;
-    /* display: block; */
+    width: 900px;
+    display: table;
     margin: 0 auto;
-    border: 1px solid #00e0d0;
-    /* border-radius: 5px; */
+    border-radius: 5px;
     font-size: 18px;
 }
 

@@ -11,11 +11,14 @@ $this->title = $title;
 
 DirAsset::register($this);
 ?>
-<? if($add_row_for): ?>
+<? if(
+        $add_row_for
+        && (Yii::$app->user->identity->isAvailable('dir_add_status')
+            || Yii::$app->user->identity->isAvailable('dir_add_criteria'))): ?>
 <?php $form = ActiveForm::begin(['id' => 'sub_form']); ?>
 <?=
 $form->field($model, 'text')
-    ->textInput(['class' => 'input', 'placeholder' => 'Введите статус'])
+    ->textInput(['class' => 'input', 'placeholder' => 'Введите '.$button_text])
     ->label(false)
     ->error(false)
 ?>

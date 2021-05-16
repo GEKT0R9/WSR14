@@ -21,13 +21,20 @@ ProfileAsset::register($this);
         <div class="user_img">
             <p><?= $first_letter ?></p>
         </div>
+
         <h3 class="fio"><?= $fio ?></h3>
+        <?= Html::a(
+            'Редактировать',
+            ['settings/user-edit', 'id' => Yii::$app->user->id],
+            ['class' => 'edit']
+        ) ?>
         <p class="mail"><?= $email ?></p>
+
         <div class="exit">
+
             <?= Html::beginForm(['/main/logout'], 'post') ?>
             <?= Html::submitButton('выйти') ?>
             <?= Html::endForm() ?>
-            <?= Html::a('Редактировать', ['settings/user-edit', 'id' => Yii::$app->user->id])?>
         </div>
     </div>
     <?= Html::a('Создать заявку', '/profile/create-request', ['class' => 'create']) ?>
@@ -40,13 +47,18 @@ ProfileAsset::register($this);
             <label class="problem" for="info_menu" id="problem_<?= $value['id'] ?>_<?= $value['type_id'] ?>">
                 <h2 class="title"><?= $value['title'] ?></h2>
                 <p class="description"><?= $value['description'] ?></p>
-                <h3 class="status" ><?= $value['status'] ?></h3>
+                <h3 class="status"><?= $value['status'] ?></h3>
                 <p class="category"><?= $value['criterion'] ?></p>
                 <p class="date"><?= $value['date'] ?></p>
                 <div class="hidden">
                     <div class="info_menu">
-                        <div class="img">
-                            <img src="data:image/png;base64,<?= $value['img'] ?>">
+                        <div class="images">
+                            <div class="before img">
+                                <img src="data:image/png;base64,<?= $value['before_img'] ?>">
+                            </div>
+                            <div class="after img">
+                                <img src="data:image/png;base64,<?= $value['after_img'] ?>">
+                            </div>
                         </div>
                         <h2 class="title_menu"><?= $value['title'] ?></h2>
                         <p class="description_menu"><?= $value['description'] ?></p>
@@ -77,21 +89,7 @@ ProfileAsset::register($this);
     <input type="checkbox" id="accept">
     <input type="checkbox" id="reject">
     <div class="info_menu">
-        <div class="img"></div>
-        <h2 class="title_menu"></h2>
-        <p class="description_menu"></p>
-        <h3 class="status_menu">Статус</h3>
-        <div class="inform">
-            <p class="category_menu">Категория</p>
-            <p class="date_menu"></p>
-        </div>
-        <? if (Yii::$app->user->identity->isAvailable('admin')): ?>
-            <div class="status_but">
-                <label for="accept">Принять</label>
-                <label for="reject">Отменить</label>
-            </div>
-        <? endif; ?>
-        <label for="del" class="del_but">Удалить заявку</label>
+
     </div>
     <label class="bg2" for="del"></label>
     <div class="del_window">

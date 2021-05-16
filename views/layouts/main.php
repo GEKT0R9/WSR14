@@ -39,24 +39,38 @@ AppAsset::register($this);
     ]);
     $items = [];
     if (!Yii::$app->user->isGuest) {
-        if (Yii::$app->user->identity->isAvailable('admin')) {
+        $dir_items = [];
+        if (Yii::$app->user->identity->isAvailable('dir_status_type')) {
+            $dir_items[] = ['label' => 'Статусы', 'url' => ['/directory', 'type' => 'status']];
+        }
+        if (Yii::$app->user->identity->isAvailable('dir_criteria')) {
+            $dir_items[] = ['label' => 'Критерии', 'url' => ['/directory', 'type' => 'criterion']];
+        }
+        if (Yii::$app->user->identity->isAvailable('dir_access')) {
+            $dir_items[] = ['label' => 'Доступы', 'url' => ['/directory', 'type' => 'access']];
+        }
+        if (count($dir_items) > 0) {
             $items[] = [
                 'label' => 'Справочники',
-                'items' => [
-                    ['label' => 'Статусы', 'url' => ['/directory', 'type' => 'status']],
-                    ['label' => 'Критерии', 'url' => ['/directory', 'type' => 'criterion']],
-                    ['label' => 'Доступы', 'url' => ['/directory', 'type' => 'access']]
-                ]
+                'items' => $dir_items
             ];
+        }
+
+        $settings_items = [];
+        if (Yii::$app->user->identity->isAvailable('settings_roles')) {
+            $settings_items[] = ['label' => 'Роли', 'url' => ['/settings/roles']];
+        }
+        if (Yii::$app->user->identity->isAvailable('settings_status_process')) {
+            $settings_items[] = ['label' => 'Бизнесс процесс', 'url' => ['/settings/status']];
+        }
+        if (Yii::$app->user->identity->isAvailable('settings_users')) {
+            $settings_items[] = ['label' => 'Пользователи', 'url' => ['/settings/users']];
+        }
+        if (count($settings_items) > 0) {
             $items[] = [
                 'label' => 'Настройки',
-                'items' => [
-                    ['label' => 'Роли', 'url' => ['/settings/roles']],
-                    ['label' => 'Бизнесс процесс', 'url' => ['/settings/status']],
-                    ['label' => 'Пользователи', 'url' => ['/settings/users']],
-                ]
+                'items' => $settings_items
             ];
-//        $items[] = ['label' => 'Заявки', 'url' => ['/directory', 'type' => 'criterion']];
         }
     }
     $items[] = Yii::$app->user->isGuest

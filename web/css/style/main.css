@@ -83,7 +83,11 @@ a {
 .title {
     margin: 305px 5px 5px;
 }
-
+.category{
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
 .description {
     overflow: hidden;
     white-space: nowrap;
@@ -96,7 +100,7 @@ a {
 .inform {
     margin: 15px 5px 5px;
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 2fr 1fr;
 }
 
 .date {

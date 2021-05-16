@@ -7,8 +7,10 @@ use app\entity\Roles;
 use app\entity\RoleToAccess;
 use app\entity\StatusOrder;
 use app\entity\Users;
+use app\entity\UsersToRole;
 use app\models\RoleAddAccessForm;
 use app\models\RoleAddEditForm;
+use app\models\UserChangeRoleForm;
 use app\models\UserEditForm;
 use app\repository\RequestRepository;
 use Throwable;
@@ -50,43 +52,55 @@ class SettingsController extends Controller
      */
     public function actionRoles()
     {
-        if (Yii::$app->user->isGuest || !Yii::$app->user->identity->isAvailable('admin')) {
+        if (Yii::$app->user->isGuest || !Yii::$app->user->identity->isAvailable('settings_roles')) {
             return $this->goHome();
         }
-        $buttons = [
-            'edit' => function ($url, $model, $key) {
+        $buttons = [];
+        $template = '';
+        if (Yii::$app->user->identity->isAvailable('settings_roles_edit')) {
+            $buttons['edit'] = function ($url, $model, $key) {
                 return Html::a(
                     'Редактировать',
                     Url::to(['role-edit', 'id' => $key]),
                     ['class' => 'del']
                 );
-            },
-            'accesses' => function ($url, $model, $key) {
+            };
+            $template .= '{edit}';
+        }
+        if (Yii::$app->user->identity->isAvailable('settings_roles_access')) {
+            $buttons['accesses'] = function ($url, $model, $key) {
                 return Html::a(
                     'Доступы',
                     Url::to(['accesses', 'id' => $key]),
                     ['class' => 'del']
                 );
-            },
-            'delete' => function ($url, $model, $key) {
+            };
+            $template .= '{accesses}';
+        }
+        if (Yii::$app->user->identity->isAvailable('settings_roles_del')) {
+            $buttons['delete'] = function ($url, $model, $key) {
                 return Html::a(
                     'Удалить',
                     Url::to(['delete-role', 'id' => $key]),
                     ['class' => 'del']
                 );
-            }
-        ];
+            };
+            $template .= '{delete}';
+        }
         $columns = [
             ['attribute' => 'name', 'label' => 'Название',],
             ['attribute' => 'description', 'label' => 'Описание',],
-            [
+        ];
+        if (!empty($template)) {
+            $columns[] = [
                 'class' => 'yii\grid\ActionColumn',
                 'header' => 'Действия',
                 'headerOptions' => ['width' => '80'],
-                'template' => '{edit}{accesses}{delete}',
+                'template' => $template,
                 'buttons' => $buttons,
-            ]
-        ];
+            ];
+        }
+
         $provider = new ActiveDataProvider(
             [
                 'query' => Roles::find(),
@@ -104,6 +118,9 @@ class SettingsController extends Controller
 
     public function actionRoleAdd()
     {
+        if (Yii::$app->user->isGuest || !Yii::$app->user->identity->isAvailable('settings_roles_add')) {
+            return $this->goHome();
+        }
         $model = new RoleAddEditForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             $role = new Roles;
@@ -121,6 +138,9 @@ class SettingsController extends Controller
 
     public function actionAccesses($id)
     {
+        if (Yii::$app->user->isGuest || !Yii::$app->user->identity->isAvailable('settings_roles_access')) {
+            return $this->goHome();
+        }
         $model = new RoleAddAccessForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             RoleToAccess::deleteAll('role_id = ' . $id);
@@ -155,6 +175,9 @@ class SettingsController extends Controller
 
     public function actionRoleEdit($id)
     {
+        if (Yii::$app->user->isGuest || !Yii::$app->user->identity->isAvailable('settings_roles_edit')) {
+            return $this->goHome();
+        }
         $role = Roles::find()->where(['id' => $id])->one();
         $model = new RoleAddEditForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
@@ -174,16 +197,18 @@ class SettingsController extends Controller
 
     public function actionDeleteRole($id)
     {
+        if (Yii::$app->user->isGuest || !Yii::$app->user->identity->isAvailable('settings_roles_del')) {
+            return $this->goHome();
+        }
         Roles::find()->where(['id' => $id])->one()->delete();
         return $this->redirect(Url::to(['roles']));
     }
 
     public function actionStatus()
     {
-        if (Yii::$app->user->isGuest || !Yii::$app->user->identity->isAvailable('admin')) {
+        if (Yii::$app->user->isGuest || !Yii::$app->user->identity->isAvailable('settings_status_process')) {
             return $this->goHome();
         }
-
         $buttons = [
             'edit' => function ($url, $model, $key) {
                 return Html::a(
@@ -266,6 +291,9 @@ class SettingsController extends Controller
 
     public function actionStatusAdd()
     {
+        if (Yii::$app->user->isGuest || !Yii::$app->user->identity->isAvailable('settings_status_process')) {
+            return $this->goHome();
+        }
         $model = new RoleAddEditForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             $status = new StatusOrder;
@@ -274,6 +302,11 @@ class SettingsController extends Controller
             $status->type_id = 2;
             $status->order = StatusOrder::find()->count() + 1;
             $status->save();
+
+            $access = new Access();
+            $access->access = 'status_' . $status->id;
+            $access->description = 'Доступ к управлению статусом "' . $status->title . '"';
+            $access->save();
             return $this->redirect(Url::to(['status']));
         }
         return $this->render('role-add', [
@@ -285,6 +318,9 @@ class SettingsController extends Controller
 
     public function actionStatusEdit($id)
     {
+        if (Yii::$app->user->isGuest || !Yii::$app->user->identity->isAvailable('settings_status_process')) {
+            return $this->goHome();
+        }
         $status = StatusOrder::find()->where(['id' => $id])->one();
         $model = new RoleAddEditForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
@@ -304,12 +340,18 @@ class SettingsController extends Controller
 
     public function actionStatusDelete($id)
     {
+        if (Yii::$app->user->isGuest || !Yii::$app->user->identity->isAvailable('settings_status_process')) {
+            return $this->goHome();
+        }
         StatusOrder::find()->where(['id' => $id])->one()->delete();
         return $this->redirect(Url::to(['status']));
     }
 
     public function actionStatusUp($id)
     {
+        if (Yii::$app->user->isGuest || !Yii::$app->user->identity->isAvailable('settings_status_process')) {
+            return $this->goHome();
+        }
         $status = StatusOrder::find()->where(['id' => $id])->one();
         if ($status->order - 1 != 0) {
             $status_up = StatusOrder::find()->where(['order' => $status->order - 1])->one();
@@ -324,6 +366,9 @@ class SettingsController extends Controller
 
     public function actionStatusDown($id)
     {
+        if (Yii::$app->user->isGuest || !Yii::$app->user->identity->isAvailable('settings_status_process')) {
+            return $this->goHome();
+        }
         $status = StatusOrder::find()->where(['id' => $id])->one();
         if ($status->order + 1 <= StatusOrder::find()->count()) {
             $status_down = StatusOrder::find()->where(['order' => $status->order + 1])->one();
@@ -338,6 +383,9 @@ class SettingsController extends Controller
 
     public function actionUsers()
     {
+        if (Yii::$app->user->isGuest || !Yii::$app->user->identity->isAvailable('settings_users')) {
+            return $this->goHome();
+        }
         Url::remember();
         $users = [];
         $user_find = Users::find();
@@ -366,6 +414,14 @@ class SettingsController extends Controller
 
     public function actionUserEdit($id)
     {
+        if (Yii::$app->user->isGuest) {
+            return $this->goHome();
+        }
+        if (Yii::$app->user->id != $id) {
+            if (!Yii::$app->user->identity->isAvailable('settings_users_edit')) {
+                return $this->goHome();
+            }
+        }
         $model = new UserEditForm();
         $user = Users::find()->where(['id' => $id])->one();
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
@@ -389,6 +445,30 @@ class SettingsController extends Controller
 
         return $this->render('user-edit', [
             'model' => $model
+        ]);
+    }
+
+    public function actionUserChangeRole($id)
+    {
+        $model = new UserChangeRoleForm();
+        if (Yii::$app->user->isGuest || !Yii::$app->user->identity->isAvailable('settings_users_role')) {
+            return $this->goHome();
+        }
+        $utr = UsersToRole::find()->where(['user_id' => $id])->one();
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            $utr->user_id = $id;
+            $utr->role_id = $model->role;
+            $utr->save();
+            return $this->redirect(Url::to(['users']));
+        }
+        $model->role = $utr->role_id;
+        $roles = [];
+        foreach (Roles::find()->all() as $role){
+            $roles[$role->id] = $role->name;
+        }
+        return $this->render('user-change-role', [
+            'model' => $model,
+            'roles' => $roles
         ]);
     }
 }

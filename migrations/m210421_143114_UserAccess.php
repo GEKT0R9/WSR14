@@ -30,8 +30,25 @@ class m210421_143114_UserAccess extends Migration
         );
         $this->insert(
             'access',
-            ['access' => 'admin','description' => 'Права администратора']
+            ['access' => 'status_1', 'description' => 'Доступ к управлению статусом "Новая"']
         );
+        $this->insert(
+            'access',
+            ['access' => 'status_2', 'description' => 'Доступ к управлению статусом "На обработке"']
+        );
+        $this->insert(
+            'access',
+            ['access' => 'status_3', 'description' => 'Доступ к управлению статусом "Выполнение"']
+        );
+        $this->insert(
+            'access',
+            ['access' => 'status_complete', 'description' => 'Доступ к управлению статусом "Решена"']
+        );
+        $this->insert(
+            'access',
+            ['access' => 'status_denied', 'description' => 'Доступ к управлению статусом "Отклонено"']
+        );
+
         $this->insert(
             'roles',
             [
@@ -47,6 +64,7 @@ class m210421_143114_UserAccess extends Migration
         $this->createTable(
             'users_to_role',
             [
+                'id' => $this->primaryKey(),
                 'user_id' => 'int',
                 'role_id' => 'int',
             ]
@@ -79,6 +97,7 @@ class m210421_143114_UserAccess extends Migration
         $this->createTable(
             'role_to_access',
             [
+                'id' => $this->primaryKey(),
                 'role_id' => 'int',
                 'access_id' => 'int',
             ]
@@ -100,10 +119,6 @@ class m210421_143114_UserAccess extends Migration
             'id',
             'CASCADE',
             'CASCADE'
-        );
-        $this->insert(
-            'role_to_access',
-            ['role_id' => 2, 'access_id' => 1]
         );
     }
 

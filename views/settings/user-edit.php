@@ -1,9 +1,11 @@
 <?php
 
+use app\assets\FormAsset;
 use yii\bootstrap\ActiveForm;
 use yii\helpers\Html;
 
 $this->title = 'Редактирование пользователя';
+FormAsset::register($this);
 ?>
 <div class="form">
 
@@ -15,55 +17,55 @@ $this->title = 'Редактирование пользователя';
 
     <?=
     $form->field($model, 'last_name')
-        ->textInput(['placeholder' => 'Введите название проблемы'])
+        ->textInput(['placeholder' => 'Введите фамилию'])
         ->label(false)
         ->error(false)
     ?>
 
     <?=
     $form->field($model, 'first_name')
-        ->textInput(['placeholder' => 'Введите название проблемы'])
+        ->textInput(['placeholder' => 'Введите имя'])
         ->label(false)
         ->error(false)
     ?>
 
     <?=
     $form->field($model, 'middle_name')
-        ->textInput(['placeholder' => 'Введите название проблемы'])
+        ->textInput(['placeholder' => 'Введите отчество'])
         ->label(false)
         ->error(false)
     ?>
 
     <?=
     $form->field($model, 'username')
-        ->textInput(['placeholder' => 'Введите название проблемы'])
+        ->textInput(['placeholder' => 'Введите логин'])
         ->label(false)
         ->error(false)
     ?>
 
     <?=
     $form->field($model, 'email')
-        ->textInput(['placeholder' => 'Введите название проблемы'])
+        ->textInput(['placeholder' => 'Введите электронную почту'])
         ->label(false)
         ->error(false)
     ?>
 
     <?=
     $form->field($model, 'edit_password')
-        ->checkbox(['placeholder' => 'Введите название проблемы'])
+        ->checkbox()
         ->error(false)
     ?>
 
     <?=
     $form->field($model, 'password')
-        ->textInput(['placeholder' => 'Введите название проблемы'])
+        ->textInput(['placeholder' => 'Введите новый пароль'])
         ->label(false)
         ->error(false)
     ?>
 
     <?=
     $form->field($model, 'repeat_password')
-        ->textInput(['placeholder' => 'Введите название проблемы'])
+        ->textInput(['placeholder' => 'Повторите пароль'])
         ->label(false)
         ->error(false)
     ?>
