@@ -2,7 +2,9 @@
 
 namespace app\repository;
 
+use app\entity\RoleToAccess;
 use app\entity\Users;
+use app\entity\UsersToRole;
 use yii\db\ActiveRecord;
 
 class UserRepository
@@ -33,6 +35,12 @@ class UserRepository
         $new_user->email = $email;
         $new_user->password = password_hash($password, PASSWORD_DEFAULT);
         $new_user->save();
+
+        $utr = new UsersToRole();
+        $utr->user_id = $new_user->id;
+        $utr->role_id = 1;
+        $utr->save();
+
         return $new_user;
     }
 

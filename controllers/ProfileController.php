@@ -11,6 +11,7 @@ use app\repository\FileRepository;
 use app\repository\RequestRepository;
 use Yii;
 use yii\data\Pagination;
+use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\web\UploadedFile;
@@ -32,6 +33,7 @@ class ProfileController extends Controller
      */
     public function actionIndex()
     {
+        Url::remember();
         if (Yii::$app->user->isGuest) {
             return $this->redirect('main/login');
         }

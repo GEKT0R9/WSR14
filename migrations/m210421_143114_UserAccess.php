@@ -34,6 +34,13 @@ class m210421_143114_UserAccess extends Migration
         );
         $this->insert(
             'roles',
+            [
+                'name' => 'Пользователь',
+                'description' => 'Обычный пользователь который авторизовался на сайте'
+            ]
+        );
+        $this->insert(
+            'roles',
             ['name' => 'Администратор']
         );
         /* Пользователи к ролям */
@@ -65,7 +72,7 @@ class m210421_143114_UserAccess extends Migration
 
         $this->insert(
             'users_to_role',
-            ['user_id' => 1, 'role_id' => 1]
+            ['user_id' => 1, 'role_id' => 2]
         );
 
         /* Роли к доступам */
@@ -96,7 +103,7 @@ class m210421_143114_UserAccess extends Migration
         );
         $this->insert(
             'role_to_access',
-            ['role_id' => 1, 'access_id' => 1]
+            ['role_id' => 2, 'access_id' => 1]
         );
     }
 

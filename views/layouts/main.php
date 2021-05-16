@@ -53,6 +53,7 @@ AppAsset::register($this);
                 'items' => [
                     ['label' => 'Роли', 'url' => ['/settings/roles']],
                     ['label' => 'Бизнесс процесс', 'url' => ['/settings/status']],
+                    ['label' => 'Пользователи', 'url' => ['/settings/users']],
                 ]
             ];
 //        $items[] = ['label' => 'Заявки', 'url' => ['/directory', 'type' => 'criterion']];

@@ -6,12 +6,15 @@ use app\entity\Access;
 use app\entity\Roles;
 use app\entity\RoleToAccess;
 use app\entity\StatusOrder;
+use app\entity\Users;
 use app\models\RoleAddAccessForm;
 use app\models\RoleAddEditForm;
+use app\models\UserEditForm;
 use app\repository\RequestRepository;
 use Throwable;
 use Yii;
 use yii\data\ActiveDataProvider;
+use yii\data\Pagination;
 use yii\db\StaleObjectException;
 use yii\helpers\Html;
 use yii\helpers\Url;
@@ -215,7 +218,10 @@ class SettingsController extends Controller
             },
         ];
         $columns = [
-            'id',
+            [
+                'attribute' => 'order',
+                'label' => 'Порядок',
+            ],
             [
                 'attribute' => 'title',
                 'label' => 'Название',
@@ -228,10 +234,7 @@ class SettingsController extends Controller
                 'attribute' => 'type_id',
                 'label' => 'Тип',
             ],
-            [
-                'attribute' => 'order',
-                'label' => 'Порядок',
-            ],
+
             [
                 'class' => 'yii\grid\ActionColumn',
                 'header' => 'Действия',
@@ -331,5 +334,61 @@ class SettingsController extends Controller
             $status->save();
         }
         return $this->redirect(Url::to(['status']));
+    }
+
+    public function actionUsers()
+    {
+        Url::remember();
+        $users = [];
+        $user_find = Users::find();
+        $pages = new Pagination(['totalCount' => $user_find->count(), 'pageSize' => 10]);
+        $user_find = $user_find->offset($pages->offset)->limit($pages->limit)->all();
+        foreach ($user_find as $user) {
+            $fio = [];
+            $fio[] = $user->last_name;
+            $fio[] = $user->first_name;
+            if ($user->middle_name) {
+                $fio[] = $user->middle_name;
+            }
+            $users[] = [
+                'id' => $user->id,
+                'fio' => implode(' ', $fio),
+                'username' => $user->username,
+                'email' => $user->email,
+                'role' => $user->roles[0]->name
+            ];
+        }
+        return $this->render('users', [
+            'users' => $users,
+            'pages' => $pages,
+        ]);
+    }
+
+    public function actionUserEdit($id)
+    {
+        $model = new UserEditForm();
+        $user = Users::find()->where(['id' => $id])->one();
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            $user->last_name = $model->last_name;
+            $user->first_name = $model->first_name;
+            $user->middle_name = $model->middle_name;
+            $user->username = $model->username;
+            $user->email = $model->email;
+            if (!empty($model->password) && $model->edit_password == '1') {
+                $user->password = password_hash($model->password, PASSWORD_DEFAULT);
+            }
+            $user->save();
+            return $this->redirect(Url::previous());
+        }
+        $model->id = $user->id;
+        $model->last_name = $user->last_name;
+        $model->first_name = $user->first_name;
+        $model->middle_name = $user->middle_name;
+        $model->username = $user->username;
+        $model->email = $user->email;
+
+        return $this->render('user-edit', [
+            'model' => $model
+        ]);
     }
 }

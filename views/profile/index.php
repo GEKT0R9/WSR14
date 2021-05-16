@@ -27,6 +27,7 @@ ProfileAsset::register($this);
             <?= Html::beginForm(['/main/logout'], 'post') ?>
             <?= Html::submitButton('выйти') ?>
             <?= Html::endForm() ?>
+            <?= Html::a('Редактировать', ['settings/user-edit', 'id' => Yii::$app->user->id])?>
         </div>
     </div>
     <?= Html::a('Создать заявку', '/profile/create-request', ['class' => 'create']) ?>
