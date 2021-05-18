@@ -75,7 +75,12 @@ AppAsset::register($this);
     }
     $items[] = Yii::$app->user->isGuest
         ? (['label' => 'Авторизация', 'url' => ['/main/login']])
-        : (['label' => 'Профиль', 'url' => ['/profile']]);
+        : (Yii::$app->user->identity->isAvailable('request_in_work')
+            ?['label' => 'Личный кабинет', 'items' => [
+                ['label' => 'Профиль', 'url' => ['/profile']],
+                ['label' => 'Заявки в работе', 'url' => ['/profile/request-in-work']]
+            ]]
+            :['label' => 'Профиль', 'url' => ['/profile']]);
     echo Nav::widget([
         'options' => ['class' => 'ul'],
         'items' => $items,

@@ -18,28 +18,6 @@ ProfileAsset::register($this);
 <div class="content">
     <input type="checkbox" id="info_menu">
 
-    <div class="user_info">
-        <div class="user_img">
-            <p><?= $first_letter ?></p>
-        </div>
-
-        <h3 class="fio"><?= $fio ?></h3>
-        <?= Html::a(
-            'Редактировать',
-            ['settings/user-edit', 'id' => Yii::$app->user->id],
-            ['class' => 'edit']
-        ) ?>
-        <p class="mail"><?= $email ?></p>
-
-        <div class="exit">
-
-            <?= Html::beginForm(['/main/logout'], 'post') ?>
-            <?= Html::submitButton('выйти') ?>
-            <?= Html::endForm() ?>
-        </div>
-    </div>
-    <?= Html::a('Создать заявку', '/profile/create-request', ['class' => 'create']) ?>
-
     <div class="problems">
         <?php $form = ActiveForm::begin(['id' => 'sub_form']); ?>
         <?= $form->field($model, 'filt')->dropDownList($status, ['id' => 'filt'])->label(false) ?>
@@ -70,12 +48,8 @@ ProfileAsset::register($this);
                         </div>
                         <? if ($value['allow']): ?>
                             <div class="status_but">
-                                <label data-toggle="modal" data-target="#accept_modal" >Принять</label>
-                                <? if ($value['type_id'] == 1): ?>
-                                    <label><?= Html::a('Редактировать', ['edit-request', 'id' => $value['id']]) ?></label>
-                                <? else: ?>
-                                    <label data-toggle="modal" data-target="#reject_modal">Отменить</label>
-                                <? endif; ?>
+                                <label data-toggle="modal" data-target="#accept_modal">Принять</label>
+                                <label data-toggle="modal" data-target="#reject_modal">Отменить</label>
                             </div>
                         <? endif; ?>
                         <? if ($value['allow_del']): ?>
@@ -90,19 +64,14 @@ ProfileAsset::register($this);
         ]); ?>
     </div>
     <label class="bg" for="info_menu"></label>
-
-
-    <div class="info_menu">
-
-    </div>
-
+    <div class="info_menu"></div>
     <? $modal = Modal::begin([
         'id' => 'del_modal',
         'header' => '<h2>Вы действительно хотите удалить заявку?</h2>',
     ]); ?>
     <div class="del_window">
         <a class="yes"><input type="hidden" value="">Удалить</a>
-        <label class="no" data-dismiss="modal">Отмена</label>
+        <button data-dismiss="modal">Отмена</button>
     </div>
     <?php $modal->end(); ?>
 
@@ -124,8 +93,9 @@ ProfileAsset::register($this);
         <?= $form->field($model_accept, 'id')->hiddenInput(['class' => 'hidden_id'])->label(false) ?>
         <?php ActiveForm::end(); ?>
         <input id="status_type" type="hidden" value="">
+        <textarea id="comment_accept" placeholder="Введите примичание"></textarea>
         <a id="accept_yes" class="yes"><input type="hidden" value="">Принять</a>
-        <label for="accept" class="no" data-dismiss="modal">Отмена</label>
+        <label class="no" data-dismiss="modal">Отмена</label>
     </div>
     <?php $modal->end(); ?>
 
@@ -134,9 +104,9 @@ ProfileAsset::register($this);
         'header' => '<h2>Отменить заявку?</h2>',
     ]); ?>
     <div class="reject_window">
-        <h2>Отменить заявку?</h2>
+        <textarea id="comment_reject" placeholder="Введите примичание"></textarea>
         <a id="reject_yes" class="yes"><input type="hidden" value="">Отменить</a>
-        <label for="reject" class="no" data-dismiss="modal">Отмена</label>
+        <label class="no" data-dismiss="modal">Отмена</label>
     </div>
     <?php $modal->end(); ?>
 </div>

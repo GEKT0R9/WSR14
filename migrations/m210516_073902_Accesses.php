@@ -82,6 +82,27 @@ class m210516_073902_Accesses extends Migration
             ['access' => 'del_request', 'description' => 'Удаление заявки']
         );
 
+        $this->insert(
+            'access',
+            ['access' => 'request_in_work', 'description' => 'Заявки в работе']
+        );
+
+
+        $this->insert(
+            'access',
+            ['access' => 'notice', 'description' => 'Уведомления']
+        );
+
+
+        $this->insert(
+            'role_to_access',
+            ['role_id' => 1, 'access_id' => 1]
+        );
+
+        $this->insert(
+            'role_to_access',
+            ['role_id' => 1, 'access_id' => 20]
+        );
         foreach(\app\entity\Access::find()->all() as $value){
             $this->insert(
                 'role_to_access',

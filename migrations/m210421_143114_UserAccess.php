@@ -1,5 +1,6 @@
 <?php
 
+use yii\db\Expression;
 use yii\db\Migration;
 
 /**
@@ -30,7 +31,7 @@ class m210421_143114_UserAccess extends Migration
         );
         $this->insert(
             'access',
-            ['access' => 'status_1', 'description' => 'Доступ к управлению статусом "Новая"']
+            ['access' => 'status_new', 'description' => 'Доступ к управлению статусом "Новая"']
         );
         $this->insert(
             'access',
@@ -120,6 +121,35 @@ class m210421_143114_UserAccess extends Migration
             'CASCADE',
             'CASCADE'
         );
+
+        $this->createTable(
+            'comment_to_request',
+            [
+                'id' => $this->primaryKey(),
+                'comment' => $this->string(50)->notNull(),
+                'date' => $this->dateTime()->defaultValue(new Expression('NOW()')),
+                'request_id' => $this->integer()->notNull(),
+                'user_id' => $this->integer()->notNull(),
+            ]
+        );
+        $this->addForeignKey(
+            'request_id_fk_comment_to_request',
+            'comment_to_request',
+            'request_id',
+            'requests',
+            'id',
+            'CASCADE',
+            'CASCADE'
+        );
+        $this->addForeignKey(
+            'user_id_fk_comment_to_request',
+            'comment_to_request',
+            'user_id',
+            'users',
+            'id',
+            'CASCADE',
+            'CASCADE'
+        );
     }
 
     public function safeDown()
@@ -128,5 +158,6 @@ class m210421_143114_UserAccess extends Migration
         $this->dropTable('roles');
         $this->dropTable('users_to_role');
         $this->dropTable('role_to_access');
+        $this->dropTable('comment_to_request');
     }
 }

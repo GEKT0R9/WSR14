@@ -10,7 +10,7 @@ use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 use yii\web\UploadedFile;
 
-$this->title = 'Создание заявки';
+$this->title = 'Редактирование заявки';
 FormAsset::register($this);
 ?>
 <div class="form">
@@ -31,35 +31,8 @@ FormAsset::register($this);
         ->label(false)
         ->error(false)
     ?>
-    <?=
-    $form->field($model, 'criterion')
-        ->dropDownList($criterion, ['class' => 'select', 'multiple' => 'true'])
-        ->label(false)
-        ->error(false)
-    ?>
-    <div class="file_input">
-        <div class="form-group">
-            <label class="label">
-                <span class="title">Добавить файл</span>
-                <?=
-                $form->field($model, 'image')
-                    ->fileInput([
-                        'class' => 'file',
-                        'accept' => 'image/*',
-                        'size' => '10MB',
-                        'value' => UploadedFile::getInstance($model, 'image')
-                    ])
-                    ->label(false)
-                    ->error(false)
-                ?>
-            </label>
-        </div>
-    </div>
-    <p id="file_name"></p>
-
     <?= $form->errorSummary($model, ['class' => 'error']); ?>
     <?= Html::submitButton('Создать') ?>
-
 
     <?php ActiveForm::end(); ?>
 

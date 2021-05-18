@@ -2,9 +2,11 @@
 
 namespace app\controllers;
 
+use app\entity\CommentToRequest;
 use app\entity\Requests;
 use app\entity\StatusOrder;
 use app\models\RegistrationForm;
+use app\repository\DirRepository;
 use app\repository\RequestRepository;
 use app\repository\UserRepository;
 use Yii;
@@ -33,11 +35,37 @@ class MainController extends Controller
      */
     public function actionIndex()
     {
+        $user_requests_count = 0;
+        if (!Yii::$app->user->isGuest && Yii::$app->user->identity->isAvailable('notice')){
+            $status_array = DirRepository::getStatusAsArray();
+            $sts = [];
+            foreach ($status_array as $key => $val) {
+                if (Yii::$app->user->identity->isAvailable('status_' . $key)) {
+                    $sts[] = $key;
+                }
+            }
+            $options['status_id'] = $sts;
+            $user_requests_count = RequestRepository::getRequestsFind(['and', $options])->count();
+        }
+        $request = RequestRepository::getFourRequestsForMain();
+        foreach ($request as $key => $value){
+            $ctr = CommentToRequest::find()->where(['request_id' => $value['id']])->all();
+            $comment = [];
+            foreach ($ctr as $key2 => $value2) {
+                $comment[] = [
+                    'text' => $value2->comment,
+                    'date' => $value2->date,
+                    'role' => $value2->user->roles[0]->name
+                ];
+            }
+            $request[$key]['comments'] = $comment;
+        }
         return $this->render('index', [
-            'requests' => RequestRepository::getFourRequestsForMain(),
+            'requests' => $request,
             'count' => Requests::find()
                 ->where(['status_id' => StatusOrder::find()->where(['type_id' => 4])->one()->id])
-                ->count()
+                ->count(),
+            'notice_count' => $user_requests_count,
         ]);
     }
 

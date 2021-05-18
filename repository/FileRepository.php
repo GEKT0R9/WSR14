@@ -15,6 +15,10 @@ class FileRepository
         return Files::find()->where(['id' => $id])->one()->file_content;
     }
 
+    public static function getFileById($id) {
+        return Files::find()->where(['id' => $id])->one();
+    }
+
     /**
      * Создание файла
      * @param string $name название файла

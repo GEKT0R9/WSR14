@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\entity\CommentToRequest;
 use app\entity\StatusOrder;
 use app\models\AcceptRequestForm;
 use app\models\CreateRequestForm;
@@ -45,6 +46,7 @@ class ProfileController extends Controller
             $fio[] = $user->middle_name;
         }
         $options = [];
+        $options['create_user_id'] = Yii::$app->user->id;
         $model = new ProfileForm();
         if ($model->load(Yii::$app->request->post())) {
             $_SESSION['filt'] = $model->filt;
@@ -56,9 +58,6 @@ class ProfileController extends Controller
             $options['status_id'] = $_SESSION['filt'];
         }
 
-        if (!$user->isAvailable('admin')) {
-            $options['create_user_id'] = Yii::$app->user->id;
-        }
         $user_requests = RequestRepository::getRequestsFind(['and', $options]);
         $pages = new Pagination(['totalCount' => $user_requests->count(), 'pageSize' => 10]);
         $user_requests = $user_requests->offset($pages->offset)->limit($pages->limit)->all();
@@ -80,9 +79,7 @@ class ProfileController extends Controller
             $requests[$key]['date'] = date('d.m.Y', strtotime($value->date));
             $requests[$key]['before_img'] = $value->before_img->file_content;
             $requests[$key]['after_img'] = $value->after_img->file_content;
-            $requests[$key]['allow'] =
-                ($user->isAvailable('status_' . $value->status->id))
-                && ($value->status->type_id != 4 || $value->status->type_id != 5);
+            $requests[$key]['allow'] = ($value->status->type_id == 1);
             $requests[$key]['allow_del'] = ($user->isAvailable('del_request') && $value->status->type_id == 1);
         }
 
@@ -139,6 +136,34 @@ class ProfileController extends Controller
         ]);
     }
 
+
+    /**
+     * Страница создания заявки
+     * @return string|Response
+     */
+    public function actionEditRequest($id)
+    {
+        if (Yii::$app->user->isGuest) {
+            return $this->redirect('/main/login');
+        }
+        $request = RequestRepository::getRequestsFind(['id' => $id])->one();
+        if ($request->create_user_id != Yii::$app->user->id) {
+            return $this->goHome();
+        }
+        $model = new CreateRequestForm();
+        if ($model->load(Yii::$app->request->post())) {
+            $request->title = $model->title;
+            $request->description = $model->description;
+            $request->save();
+            return $this->redirect('/profile');
+        }
+        $model->title = $request->title;
+        $model->description = $request->description;
+        return $this->render('edit-request', [
+            'model' => $model,
+        ]);
+    }
+
     /**
      * Удаление заявки
      * @return string|Response
@@ -181,7 +206,7 @@ class ProfileController extends Controller
                     $request->after_img_id = $img->id;
                     $request->save();
                 }
-                return $this->redirect('/profile');
+                return $this->redirect('request-in-work');
             }
         }
         return $this->goHome();
@@ -200,6 +225,13 @@ class ProfileController extends Controller
         $post = Yii::$app->request->post();
         $request = RequestRepository::getRequestsFind(['id' => $post['id']])->one();
         if (Yii::$app->user->identity->isAvailable('status_' . $request->status->id)) {
+            if (!empty($post['comment'])){
+                $ctr = new CommentToRequest();
+                $ctr->comment = $post['comment'];
+                $ctr->user_id = Yii::$app->user->id;
+                $ctr->request_id = $post['id'];
+                $ctr->save();
+            }
             if ($request->status->order == 2) {
                 $request->status_id = StatusOrder::find()->where(['type_id' => 5])->one()->id;
             } else {
@@ -223,11 +255,85 @@ class ProfileController extends Controller
         }
         $post = Yii::$app->request->post();
         $request = RequestRepository::getRequestsFind(['id' => $post['id']])->one();
-        if (Yii::$app->user->identity->isAvailable('status_' . $request->status->id)) {
+        if (Yii::$app->user->identity->isAvailable('status_' . (($request->status->type_id == 1) ? 'new' : $request->status->id))) {
+            if (!empty($post['comment'])){
+                $ctr = new CommentToRequest();
+                $ctr->comment = $post['comment'];
+                $ctr->user_id = Yii::$app->user->id;
+                $ctr->request_id = $post['id'];
+                $ctr->save();
+            }
             $request->status_id = StatusOrder::find()->where(['order' => $request->status->order + 1])->one()->id;
             $request->save();
             return 'Статус изменён';
         }
         return $this->goHome();
+    }
+
+    public function actionRequestInWork()
+    {
+        if (Yii::$app->user->isGuest && !Yii::$app->user->identity->isAvailable('request_in_work')) {
+            return $this->redirect('main/login');
+        }
+
+        $options = [];
+
+        $status_array = DirRepository::getStatusAsArray();
+        $status = [];
+        $sts = [];
+        foreach ($status_array as $key => $val) {
+            if (Yii::$app->user->identity->isAvailable('status_' . $key)) {
+                $sts[] = $key;
+                $status[$key] = $val;
+            }
+        }
+        $options['status_id'] = $sts;
+        $model = new ProfileForm();
+        if ($model->load(Yii::$app->request->post())) {
+            $_SESSION['filt'] = $model->filt;
+            if ($model->filt != 0) {
+                $options['status_id'] = $model->filt;
+            }
+        } else if (!empty($_SESSION['filt'])) {
+            $model->filt = $_SESSION['filt'];
+            $options['status_id'] = $_SESSION['filt'];
+        }
+
+        $user_requests = RequestRepository::getRequestsFind(['and', $options]);
+        $pages = new Pagination(['totalCount' => $user_requests->count(), 'pageSize' => 10]);
+        $user_requests = $user_requests->offset($pages->offset)->limit($pages->limit)->all();
+        $status[0] = 'Все';
+        ksort($status);
+        $requests = [];
+        foreach ($user_requests as $key => $value) {
+            $criteria = [];
+            foreach ($value->criteria as $item) {
+                $criteria[] = $item->criterion;
+            }
+            $requests[$key]['id'] = $value->id;
+            $requests[$key]['title'] = $value->title;
+            $requests[$key]['description'] = $value->description;
+            $requests[$key]['criterion'] = implode(', ', $criteria);
+            $requests[$key]['type_id'] = $value->status->type_id;
+            $requests[$key]['status'] = $value->status->title;
+            $requests[$key]['date'] = date('d.m.Y', strtotime($value->date));
+            $requests[$key]['before_img'] = $value->before_img->file_content;
+            $requests[$key]['after_img'] = $value->after_img->file_content;
+            $requests[$key]['allow'] =
+                (Yii::$app->user->identity->isAvailable('status_' . $value->status->id))
+                && ($value->status->type_id != 4 || $value->status->type_id != 5);
+            $requests[$key]['allow_del'] = (
+                Yii::$app->user->identity->isAvailable('del_request')
+                && $value->status->type_id == 1
+            );
+        }
+
+        return $this->render('request-in-work', [
+            'requests' => $requests,
+            'status' => $status,
+            'pages' => $pages,
+            'model' => $model,
+            'model_accept' => new AcceptRequestForm(),
+        ]);
     }
 }
