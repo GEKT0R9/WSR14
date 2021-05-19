@@ -1,18 +1,20 @@
 <?php
 
+use app\assets\FormAsset;
 use app\assets\RoleToAccessAsset;
 use yii\bootstrap\ActiveForm;
 use yii\helpers\Html;
 
 $this->title = $title;
 RoleToAccessAsset::register($this);
+FormAsset::register($this);
 ?>
 <div class="content">
-    <div class="form">
+    <div class="access_form form">
         <h1><?= Html::encode($this->title) ?></h1>
 
         <?php $form = ActiveForm::begin(); ?>
-        <div style="display: grid; grid-template-columns: 2fr 1fr 2fr;">
+        <div style="display: grid; grid-template-columns: 3fr 1fr 3fr;">
             <div>
                 <?=
                 $form->field($model, 'all_access_list')
@@ -20,8 +22,13 @@ RoleToAccessAsset::register($this);
                 ?>
                 <a id="go_to_role">Переместить</a>
             </div>
-            <div>
-
+            <div class="access_info_all">
+                <? foreach ($access_info as $item): ?>
+                    <div id="access_<?= $item['id'] ?>" class="hidden access_info">
+                        <h2><?= $item['title'] ?></h2>
+                        <h3><?= $item['description'] ?></h3>
+                    </div>
+                <? endforeach; ?>
             </div>
             <div>
                 <?=

@@ -158,7 +158,13 @@ class SettingsController extends Controller
             $role_list[$value->id] = $value->access;
         }
         $all_list = [];
+        $access_info = [];
         foreach (Access::find()->all() as $key => $value) {
+            $access_info[$value->id] = [
+                'id' => $value->id,
+                'title' => $value->access,
+                'description' => $value->description,
+            ];
             if (!array_key_exists($value->id, $role_list)) {
                 $all_list[$value->id] = $value->access;
             }
@@ -167,7 +173,8 @@ class SettingsController extends Controller
             'model' => $model,
             'role_list' => $role_list,
             'all_list' => $all_list,
-            'title' => 'Редактирование роли',
+            'access_info' => $access_info,
+            'title' => 'Редактирование доступов роли',
             'button_text' => 'Сохранить'
         ]);
 //        return $this->redirect(Url::to(['roles']));
@@ -463,7 +470,7 @@ class SettingsController extends Controller
         }
         $model->role = $utr->role_id;
         $roles = [];
-        foreach (Roles::find()->all() as $role){
+        foreach (Roles::find()->all() as $role) {
             $roles[$role->id] = $role->name;
         }
         return $this->render('user-change-role', [

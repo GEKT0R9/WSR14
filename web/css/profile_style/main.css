@@ -410,7 +410,7 @@ label.file_label:hover {
     box-shadow: 0px -4px 8px -1px rgba(0, 0, 0, 0) inset;
 }
 
-#filt {
+.filt {
     display: block;
     float: right;
     width: 150px;
@@ -423,8 +423,8 @@ label.file_label:hover {
     box-shadow: none;
 }
 
-#filt:focus,
-#filt:hover {
+.filt:focus,
+.filt:hover {
     border-bottom: 1px solid #596e79;
 }
 

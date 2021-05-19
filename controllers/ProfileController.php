@@ -48,23 +48,52 @@ class ProfileController extends Controller
         }
         $options = [];
         $options['create_user_id'] = Yii::$app->user->id;
+
+        $cri = [];
+        $criterion_array = DirRepository::getCriterionAsArray();
+        foreach ($criterion_array as $key => $val) {
+            $cri[] = $key;
+        }
+
         $model = new ProfileForm();
         if ($model->load(Yii::$app->request->post())) {
-            $_SESSION['filt'] = $model->filt;
-            if ($model->filt != 0) {
-                $options['status_id'] = $model->filt;
+            $_SESSION['status_filt'] = $model->status_filt;
+            $_SESSION['criteria_filt'] = $model->criteria_filt;
+            if ($model->status_filt != 0) {
+                $options['status_id'] = $model->status_filt;
             }
-        } else if (!empty($_SESSION['filt'])) {
-            $model->filt = $_SESSION['filt'];
-            $options['status_id'] = $_SESSION['filt'];
+            if ($model->criteria_filt != 0) {
+                $cri = $model->criteria_filt;
+            }
+        } else {
+            if (!empty($_SESSION['status_filt'])) {
+                $model->status_filt = $_SESSION['status_filt'];
+                $options['status_id'] = $_SESSION['status_filt'];
+            }
+            if (!empty($_SESSION['criteria_filt'])) {
+                $model->criteria_filt = $_SESSION['criteria_filt'];
+                $cri = $_SESSION['criteria_filt'];
+            }
         }
+        $rtc = RequestToCriterion::find()
+            ->select('request_id')
+            ->where(['criterion_id' => $cri])
+            ->groupBy('request_id')
+            ->all();
+        $criterion_req = [];
+        foreach ($rtc as $item) {
+            $criterion_req[] = $item->request_id;
+        }
+        $options['id'] = $criterion_req;
 
         $user_requests = RequestRepository::getRequestsFind(['and', $options]);
         $pages = new Pagination(['totalCount' => $user_requests->count(), 'pageSize' => 10]);
         $user_requests = $user_requests->offset($pages->offset)->limit($pages->limit)->all();
         $status = DirRepository::getStatusAsArray();
         $status[0] = 'Все';
+        $criterion_array[0] = 'Все';
         ksort($status);
+        ksort($criterion_array);
         $requests = [];
         foreach ($user_requests as $key => $value) {
             $criteria = [];
@@ -93,6 +122,7 @@ class ProfileController extends Controller
             'pages' => $pages,
             'model' => $model,
             'model_accept' => new AcceptRequestForm(),
+            'criteria' => $criterion_array,
         ]);
     }
 
@@ -299,32 +329,56 @@ class ProfileController extends Controller
         }
 
         $criterion_array = DirRepository::getCriterionAsArray();
-        $criterion = [];
+
         $cri = [];
+        $criter = [];
         foreach ($criterion_array as $key => $val) {
-            if (Yii::$app->user->identity->isAvailable('criteria_' . $key)) {
+            if (Yii::$app->user->identity->isAvailable('criterion_' . $key)) {
                 $cri[] = $key;
-                $criterion[$key] = $val;
+                $criter[$key] = $val;
             }
         }
 
         $options['status_id'] = $sts;
         $model = new ProfileForm();
         if ($model->load(Yii::$app->request->post())) {
-            $_SESSION['filt'] = $model->filt;
-            if ($model->filt != 0) {
-                $options['status_id'] = $model->filt;
+            $_SESSION['status_filt'] = $model->status_filt;
+            $_SESSION['criteria_filt'] = $model->criteria_filt;
+            if ($model->status_filt != 0) {
+                $options['status_id'] = $model->status_filt;
             }
-        } else if (!empty($_SESSION['filt'])) {
-            $model->filt = $_SESSION['filt'];
-            $options['status_id'] = $_SESSION['filt'];
+            if ($model->criteria_filt != 0) {
+                $cri = $model->criteria_filt;
+            }
+        } else {
+            if (!empty($_SESSION['status_filt'])) {
+                $model->status_filt = $_SESSION['status_filt'];
+                $options['status_id'] = $_SESSION['status_filt'];
+            }
+            if (!empty($_SESSION['criteria_filt'])) {
+                $model->criteria_filt = $_SESSION['criteria_filt'];
+                $cri = $_SESSION['criteria_filt'];
+            }
         }
+
+        $rtc = RequestToCriterion::find()
+            ->select('request_id')
+            ->where(['criterion_id' => $cri])
+            ->groupBy('request_id')
+            ->all();
+        $criterion_req = [];
+        foreach ($rtc as $item) {
+            $criterion_req[] = $item->request_id;
+        }
+        $options['id'] = $criterion_req;
 
         $user_requests = RequestRepository::getRequestsFind(['and', $options]);
         $pages = new Pagination(['totalCount' => $user_requests->count(), 'pageSize' => 10]);
         $user_requests = $user_requests->offset($pages->offset)->limit($pages->limit)->all();
         $status[0] = 'Все';
+        $criter[0] = 'Все';
         ksort($status);
+        ksort($criter);
         $requests = [];
         foreach ($user_requests as $key => $value) {
             $criteria = [];
@@ -354,7 +408,8 @@ class ProfileController extends Controller
             'status' => $status,
             'pages' => $pages,
             'model' => $model,
-            'criteria' => DirRepository::getCriterionAsArray(),
+            'all_criteria' => DirRepository::getCriterionAsArray(),
+            'criteria' => $criter,
             'model_accept' => new AcceptRequestForm(),
         ]);
     }

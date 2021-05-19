@@ -18,4 +18,9 @@ $(document).ready(function () {
     $('.form > form').submit(function () {
         $('#access_role_list option').prop('selected', true);
     })
+
+    $('#access_role_list option, #access_all_list option').click(function () {
+        $('.access_info').addClass('hidden');
+        $('#access_' + $(this).val()).removeClass('hidden');
+    })
 })

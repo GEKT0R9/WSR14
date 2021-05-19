@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\entity\Access;
 use app\models\DirectoryForm;
 use app\repository\DirRepository;
 use app\repository\RequestRepository;
@@ -163,18 +164,20 @@ class DirectoryController extends Controller
                     return $this->goHome();
                 }
                 $query = DirRepository::getFindCriterion();
+                $query->where(['id' => $id])->one()->delete();
+                Access::find()->where(['access' => 'criterion_'.$id])->one()->delete();
                 break;
             case 'status':
                 if (!Yii::$app->user->identity->isAvailable('dir_del_status_type')) {
                     return $this->goHome();
                 }
                 $query = DirRepository::getFindStatus();
+                $query->where(['id' => $id])->one()->delete();
                 break;
             default:
                 return $this->goHome();
                 break;
         }
-        $query->where(['id' => $id])->one()->delete();
         return $this->redirect(Url::to(['/directory', 'type' => $table]));
     }
 }

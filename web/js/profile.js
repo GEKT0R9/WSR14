@@ -23,7 +23,7 @@ $(document).ready(function () {
         }
     })
 
-    $('#filt').change( function (){
+    $('.filt').change( function (){
         $('#sub_form').submit();
     })
 

@@ -10,12 +10,22 @@ use yii\base\Model;
  */
 class ProfileForm extends Model
 {
-    public $filt;
+    public $status_filt;
+    public $criteria_filt;
+
+    public function attributeLabels()
+    {
+        return [
+            'status_filt' => 'Статусы',
+            'criteria_filt' => 'Критерии',
+        ];
+    }
 
     public function rules()
     {
         return [
-            ['filt', 'default', 'value' => 0],
+            ['status_filt', 'default', 'value' => 0],
+            ['criteria_filt', 'default', 'value' => 0],
         ];
     }
 }

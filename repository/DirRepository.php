@@ -67,6 +67,11 @@ class DirRepository
         $new_row = new DirCriterion;
         $new_row->criterion = $criterion;
         $new_row->save();
+        $acc = new Access();
+
+        $acc->access = 'criterion_'.$new_row->id;
+        $acc->description = 'Доступ к управлению критерием "'.$new_row->criterion.'"';
+        $acc->save();
         return $new_row;
     }
 

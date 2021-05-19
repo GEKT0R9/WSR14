@@ -43,3 +43,8 @@
 .nav>li>a:focus {
     background: none;
 }
+
+.nav .open > a, .nav .open > a:hover, .nav .open > a:focus {
+    background: none;
+    border-color: #337ab7;
+}

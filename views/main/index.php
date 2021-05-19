@@ -58,10 +58,12 @@ IndexAsset::register($this);
             <p id="counter"><?= $count ?></p>
         </div>
         <? if (!Yii::$app->user->isGuest && Yii::$app->user->identity->isAvailable('notice') && !empty($notice_count)): ?>
-            <div class="notice">
-                <h3>Нерешённых заявок:</h3>
-                <p><?= $notice_count ?></p>
-            </div>
+            <a class="notice_a" href="/profile/request-in-work">
+                <div class="notice">
+                    <h3>Нерешённых заявок:</h3>
+                    <p><?= $notice_count ?></p>
+                </div>
+            </a>
         <? endif; ?>
     </div>
 </div>

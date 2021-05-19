@@ -235,3 +235,8 @@ footer {
 .form button:hover {
     border: 1px solid #00e0d0;
 }
+
+.access_form{
+    max-width: initial;
+}
+

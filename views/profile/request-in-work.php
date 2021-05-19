@@ -20,7 +20,8 @@ ProfileAsset::register($this);
 
     <div class="problems">
         <?php $form = ActiveForm::begin(['id' => 'sub_form']); ?>
-        <?= $form->field($model, 'filt')->dropDownList($status, ['id' => 'filt'])->label(false) ?>
+        <?= $form->field($model, 'status_filt')->dropDownList($status, ['class' => 'filt'])->label(false) ?>
+        <?= $form->field($model, 'criteria_filt')->dropDownList($criteria, ['class' => 'filt'])->label(false) ?>
         <?php ActiveForm::end(); ?>
         <? foreach ($requests as $key => $value) : ?>
             <label class="problem" for="info_menu" id="problem_<?= $value['id'] ?>_<?= $value['type_id'] ?>">
@@ -107,7 +108,7 @@ ProfileAsset::register($this);
         <textarea id="comment_reject" placeholder="Введите примичание"></textarea>
         <input type="checkbox" id="crt"><label for="crt">Изменить критерии заявки?</label>
         <select id="crit_select" multiple disabled>
-            <? foreach ($criteria as $key => $item): ?>
+            <? foreach ($all_criteria as $key => $item): ?>
                 <option value="<?=$key?>"><?=$item?></option>
             <? endforeach; ?>
         </select>

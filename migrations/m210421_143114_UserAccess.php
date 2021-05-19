@@ -50,6 +50,12 @@ class m210421_143114_UserAccess extends Migration
             ['access' => 'status_denied', 'description' => 'Доступ к управлению статусом "Отклонено"']
         );
 
+
+        $this->insert(
+            'access',
+            ['access' => 'criterion_1', 'description' => 'Доступ к управлению критерием "Другое"']
+        );
+
         $this->insert(
             'roles',
             [
