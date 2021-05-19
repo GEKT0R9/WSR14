@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\entity\CommentToRequest;
+use app\entity\RequestToCriterion;
 use app\entity\StatusOrder;
 use app\models\AcceptRequestForm;
 use app\models\CreateRequestForm;
@@ -225,7 +226,16 @@ class ProfileController extends Controller
         $post = Yii::$app->request->post();
         $request = RequestRepository::getRequestsFind(['id' => $post['id']])->one();
         if (Yii::$app->user->identity->isAvailable('status_' . $request->status->id)) {
-            if (!empty($post['comment'])){
+            if (!empty($post['criteria'])) {
+                RequestToCriterion::deleteAll(['request_id' => $post['id']]);
+                foreach ($post['criteria'] as $item) {
+                    $rtc = new RequestToCriterion();
+                    $rtc->request_id = $post['id'];
+                    $rtc->criterion_id = $item;
+                    $rtc->save();
+                }
+            }
+            if (!empty($post['comment'])) {
                 $ctr = new CommentToRequest();
                 $ctr->comment = $post['comment'];
                 $ctr->user_id = Yii::$app->user->id;
@@ -256,7 +266,7 @@ class ProfileController extends Controller
         $post = Yii::$app->request->post();
         $request = RequestRepository::getRequestsFind(['id' => $post['id']])->one();
         if (Yii::$app->user->identity->isAvailable('status_' . (($request->status->type_id == 1) ? 'new' : $request->status->id))) {
-            if (!empty($post['comment'])){
+            if (!empty($post['comment'])) {
                 $ctr = new CommentToRequest();
                 $ctr->comment = $post['comment'];
                 $ctr->user_id = Yii::$app->user->id;
@@ -287,6 +297,17 @@ class ProfileController extends Controller
                 $status[$key] = $val;
             }
         }
+
+        $criterion_array = DirRepository::getCriterionAsArray();
+        $criterion = [];
+        $cri = [];
+        foreach ($criterion_array as $key => $val) {
+            if (Yii::$app->user->identity->isAvailable('criteria_' . $key)) {
+                $cri[] = $key;
+                $criterion[$key] = $val;
+            }
+        }
+
         $options['status_id'] = $sts;
         $model = new ProfileForm();
         if ($model->load(Yii::$app->request->post())) {
@@ -333,6 +354,7 @@ class ProfileController extends Controller
             'status' => $status,
             'pages' => $pages,
             'model' => $model,
+            'criteria' => DirRepository::getCriterionAsArray(),
             'model_accept' => new AcceptRequestForm(),
         ]);
     }
