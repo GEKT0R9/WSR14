@@ -120,7 +120,7 @@ a {
 
 .second_grid{
     display: grid;
-    grid-template-rows: 1fr 1fr;
+    grid-template-rows: max-content max-content;
     grid-row-gap: 25px;
 }
 

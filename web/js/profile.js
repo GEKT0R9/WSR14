@@ -12,7 +12,7 @@ $(document).ready(function () {
 
     $('.problem').click(function () {
         if($(this).find('.info_menu').length > 0){
-            let id = $(this).attr('id').split('_')
+            let id = $(this).attr('id').split('_');
             $('.yes > input').val(id[1]);
             $('.hidden_id').val(id[1]);
             $('#status_type').val(id[2]);
@@ -48,7 +48,8 @@ $(document).ready(function () {
             '/profile/reject-request',
             {
                 id: $($(this).children()[0]).val(),
-                comment: $('#comment_reject').val()
+                comment: $('#comment_reject').val(),
+                criteria: $('#crit_select').val(),
             },
             function (data) {
                 location.reload();
@@ -60,5 +61,16 @@ $(document).ready(function () {
         $($(this)[0]).change(function() {
             $('#file_name').html($($(this)[0]).val().replace(/\\/g,"/").split('/').pop());
         });
+    })
+
+    $('#crt').click(function (){
+        console.log($('#crit_select').val());
+        if ($('#crit_select').attr('disabled') === 'disabled'){
+            $('#crit_select').prop('disabled', false);
+            $('#crit_select option').prop('selected', false);
+        } else{
+            $('#crit_select').prop('disabled', true);
+            $('#crit_select option').prop('selected', false);
+        }
     })
 })
