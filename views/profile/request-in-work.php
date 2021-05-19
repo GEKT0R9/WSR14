@@ -105,6 +105,12 @@ ProfileAsset::register($this);
     ]); ?>
     <div class="reject_window">
         <textarea id="comment_reject" placeholder="Введите примичание"></textarea>
+        <input type="checkbox" id="crt"><label for="crt">Изменить критерии заявки?</label>
+        <select id="crit_select" multiple disabled>
+            <? foreach ($criteria as $key => $item): ?>
+                <option value="<?=$key?>"><?=$item?></option>
+            <? endforeach; ?>
+        </select>
         <a id="reject_yes" class="yes"><input type="hidden" value="">Отменить</a>
         <label class="no" data-dismiss="modal">Отмена</label>
     </div>
