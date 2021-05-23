@@ -34,6 +34,7 @@
 .ul li a {
     margin-top: 12px;
     transition: .2s color;
+    border-bottom: 1px solid rgba(0,0,0,0);
 }
 
 .ul li a:hover {
@@ -47,4 +48,8 @@
 .nav .open > a, .nav .open > a:hover, .nav .open > a:focus {
     background: none;
     border-color: #337ab7;
+}
+
+.navbar-toggle .icon-bar{
+    background-color: #fff;
 }
