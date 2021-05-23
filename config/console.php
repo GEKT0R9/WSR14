@@ -1,8 +1,8 @@
 <?php
 
 $params = require __DIR__ . '/params.php';
-//$db = require __DIR__ . '/db.php';
-$DATABASE_URL = parse_url(getenv("DATABASE_URL"));
+$db = require __DIR__ . '/db.php';
+
 $config = [
     'id' => 'basic-console',
     'basePath' => dirname(__DIR__),
@@ -25,13 +25,7 @@ $config = [
                 ],
             ],
         ],
-        'db' => [
-            'class' => 'yii\db\Connection',
-            'dsn' => 'pgsql:host='.$DATABASE_URL["host"].$DATABASE_URL["port"].';dbname='.ltrim($DATABASE_URL["path"], "/"),
-            'username' => $DATABASE_URL["user"],
-            'password' => $DATABASE_URL["pass"],
-            'charset' => 'utf8',
-        ],
+        'db' => $db,
     ],
     'params' => $params,
     /*
