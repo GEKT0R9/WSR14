@@ -62,7 +62,7 @@ class m210317_164640_StartDB extends Migration
             [
                 'id' => $this->primaryKey(),
                 'name' => $this->string(50)->notNull(),
-                'file_content' => 'LONGBLOB',
+                'file_content' => 'bytea',
                 'size' => $this->integer(),
                 'permission' => $this->string(50)->notNull()
             ]
