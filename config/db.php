@@ -1,25 +1,20 @@
 <?php
-$DATABASE_URL = [
-    'host' => 'localhost',
-    'path' => '/yii_ldbt',
-    'user' => 'postgres',
-    'pass' => '',
-];
-//$url = "postgres://fexvodefzkeggz:29e87820ce50be122e986f71de56e95f964ac0fadc94d746947cee807f65430d@ec2-52-19-170-215.eu-west-1.compute.amazonaws.com:5432/d91r9ph6tifk9e";
-//$DATABASE_URL = parse_url(getenv("DATABASE_URL"));
+
+if (getenv("YII_ENV") == 'prod') {
+    $url = parse_url(getenv("DATABASE_URL"));
+    $dsn = 'pgsql:host='.$url['host'].';dbname='.ltrim($DATABASE_URL["path"], "/");
+    $username = $url["user"];
+    $password = $url["pass"];
+} else {
+    $dsn = 'pgsql:host=localhost;dbname=yii_ldbt';
+    $username = 'postgres';
+    $password = '';
+}
 
 return [
     'class' => 'yii\db\Connection',
-    'dsn' => 'pgsql:host=ec2-52-19-170-215.eu-west-1.compute.amazonaws.com;dbname=d91r9ph6tifk9e',
-    'username' => 'fexvodefzkeggz',
-    'password' => '29e87820ce50be122e986f71de56e95f964ac0fadc94d746947cee807f65430d',
+    'dsn' => $dsn,
+    'username' => $username,
+    'password' => $password,
     'charset' => 'utf8',
 ];
-
-//return [
-//    'class' => 'yii\db\Connection',
-//    'dsn' => 'pgsql:host='.$DATABASE_URL["host"].$DATABASE_URL["port"].';dbname='.ltrim($DATABASE_URL["path"], "/"),
-//    'username' => $DATABASE_URL["user"],
-//    'password' => $DATABASE_URL["pass"],
-//    'charset' => 'utf8',
-//];

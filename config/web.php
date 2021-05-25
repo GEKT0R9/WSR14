@@ -14,9 +14,7 @@ $config = [
     'components' => [
         'request' => [
             'cookieValidationKey' => 'yNwGEZhIw5HS7Hn2piWHTRapTyS8uRtg',
-        ],
-        'cache' => [
-            'class' => 'yii\caching\FileCache',
+            'baseUrl'=> '',
         ],
         'user' => [
             'identityClass' => 'app\models\User',
@@ -40,9 +38,9 @@ $config = [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                '<controller>/<action>' => '<controller>/<action>'
             ],
         ],
-
     ],
 ];
 
