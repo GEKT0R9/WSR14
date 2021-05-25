@@ -1,20 +1,22 @@
 <?php
+$DATABASE_URL = [
+    'host' => 'localhost',
+    'path' => '/yii_ldbt',
+    'user' => 'postgres',
+    'pass' => '',
+];
 
-if (getenv("YII_ENV") == 'prod') {
-    $url = parse_url(getenv("DATABASE_URL"));
-    $dsn = 'pgsql:host='.$url['host'].';dbname='.ltrim($DATABASE_URL["path"], "/");
-    $username = $url["user"];
-    $password = $url["pass"];
-} else {
-    $dsn = 'pgsql:host=localhost;dbname=yii_ldbt';
-    $username = 'postgres';
-    $password = '';
-}
+$DATABASE_URL = parse_url(getenv("DATABASE_URL"));
 
 return [
     'class' => 'yii\db\Connection',
-    'dsn' => $dsn,
-    'username' => $username,
-    'password' => $password,
+    'dsn' => 'pgsql:host='.$DATABASE_URL["host"].$DATABASE_URL["port"].';dbname='.ltrim($DATABASE_URL["path"], "/"),
+    'username' => $DATABASE_URL["user"],
+    'password' => $DATABASE_URL["pass"],
     'charset' => 'utf8',
+
+    // Schema cache options (for production environment)
+    //'enableSchemaCache' => true,
+    //'schemaCacheDuration' => 60,
+    //'schemaCache' => 'cache',
 ];
