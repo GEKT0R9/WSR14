@@ -92,7 +92,7 @@ class MainController extends Controller
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
+            return $this->redirect('/profile');
         }
 
         $model->password = '';
@@ -136,7 +136,7 @@ class MainController extends Controller
             $model->username = $new_user->username;
             $model->password = $password;
             $model->login();
-            return $this->goHome();
+            return $this->redirect('/profile');
         }
         return $this->render('register', [
             'model' => $model,
