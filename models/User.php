@@ -28,6 +28,8 @@ class User extends BaseObject implements IdentityInterface
     public $password;
     public $email;
 
+    public $authKey;
+
     /**
      * {@inheritdoc}
      */
