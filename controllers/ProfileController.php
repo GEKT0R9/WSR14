@@ -108,9 +108,9 @@ class ProfileController extends Controller
             $requests[$key]['status'] = $value->status->title;
             $requests[$key]['date'] = date('d.m.Y', strtotime($value->date));
             $requests[$key]['before_img'] =
-                $value->before_img->file_content?stream_get_contents($value->before_img->file_content):null;
+                !empty($value->before_img->file_content)?stream_get_contents($value->before_img->file_content):null;
             $requests[$key]['after_img'] =
-                $value->after_img->file_content?stream_get_contents($value->after_img->file_content):null;
+                !empty($value->after_img->file_content)?stream_get_contents($value->after_img->file_content):null;
             $requests[$key]['allow'] = ($value->status->type_id == 1);
             $requests[$key]['allow_del'] = ($user->isAvailable('del_request') && $value->status->type_id == 1);
         }
@@ -395,9 +395,9 @@ class ProfileController extends Controller
             $requests[$key]['status'] = $value->status->title;
             $requests[$key]['date'] = date('d.m.Y', strtotime($value->date));
             $requests[$key]['before_img'] =
-                $value->before_img->file_content?stream_get_contents($value->before_img->file_content):null;
+                !empty($value->before_img->file_content)?stream_get_contents($value->before_img->file_content):null;
             $requests[$key]['after_img'] =
-                $value->after_img->file_content?stream_get_contents($value->after_img->file_content):null;
+                !empty($value->after_img->file_content)?stream_get_contents($value->after_img->file_content):null;
             $requests[$key]['allow'] =
                 (Yii::$app->user->identity->isAvailable('status_' . $value->status->id))
                 && ($value->status->type_id != 4 || $value->status->type_id != 5);
