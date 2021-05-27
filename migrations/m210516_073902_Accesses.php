@@ -101,7 +101,7 @@ class m210516_073902_Accesses extends Migration
 
         $this->insert(
             'role_to_access',
-            ['role_id' => 1, 'access_id' => 20]
+            ['role_id' => 1, 'access_id' => 21]
         );
         foreach(\app\entity\Access::find()->all() as $value){
             $this->insert(

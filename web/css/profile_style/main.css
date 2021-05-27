@@ -387,7 +387,10 @@ footer {
 }
 
 input[type="file"].file_input {
-    display: none;
+    visibility: hidden;
+    position: relative;
+    left: 39%;
+    top: -100%;
 }
 
 #accept_form {

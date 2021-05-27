@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\entity\CommentToRequest;
 use app\entity\Requests;
+use app\entity\RequestToCriterion;
 use app\entity\StatusOrder;
 use app\models\RegistrationForm;
 use app\repository\DirRepository;
@@ -36,7 +37,7 @@ class MainController extends Controller
     public function actionIndex()
     {
         $user_requests_count = 0;
-        if (!Yii::$app->user->isGuest && Yii::$app->user->identity->isAvailable('notice')){
+        if (!Yii::$app->user->isGuest && Yii::$app->user->identity->isAvailable('notice')) {
             $status_array = DirRepository::getStatusAsArray();
             $sts = [];
             foreach ($status_array as $key => $val) {
@@ -44,11 +45,30 @@ class MainController extends Controller
                     $sts[] = $key;
                 }
             }
+
+            $criterion_array = DirRepository::getCriterionAsArray();
+            $ctc = [];
+            foreach ($criterion_array as $key => $val) {
+                if (Yii::$app->user->identity->isAvailable('criterion_' . $key)) {
+                    $ctc[] = $key;
+                }
+            }
+            $rtc = RequestToCriterion::find()
+                ->select('request_id')
+                ->where(['criterion_id' => $ctc])
+                ->groupBy('request_id')
+                ->all();
+            $criterion_req = [];
+            foreach ($rtc as $item) {
+                $criterion_req[] = $item->request_id;
+            }
+            $options['id'] = $criterion_req;
             $options['status_id'] = $sts;
             $user_requests_count = RequestRepository::getRequestsFind(['and', $options])->count();
+
         }
         $request = RequestRepository::getFourRequestsForMain();
-        foreach ($request as $key => $value){
+        foreach ($request as $key => $value) {
             $ctr = CommentToRequest::find()->where(['request_id' => $value['id']])->all();
             $comment = [];
             foreach ($ctr as $key2 => $value2) {

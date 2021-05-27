@@ -92,6 +92,11 @@ ProfileAsset::register($this);
         )->label(null, ['class' => 'file_label']) ?>
         <p id="file_name"></p>
         <?= $form->field($model_accept, 'id')->hiddenInput(['class' => 'hidden_id'])->label(false) ?>
+        <?=
+        $form->field($model_accept, 'comment')
+            ->hiddenInput(['id' => 'file_comment', 'class' => 'hidden_id'])
+            ->label(false)
+        ?>
         <?php ActiveForm::end(); ?>
         <input id="status_type" type="hidden" value="">
         <textarea id="comment_accept" placeholder="Введите примичание"></textarea>
@@ -109,7 +114,7 @@ ProfileAsset::register($this);
         <input type="checkbox" id="crt"><label for="crt">Изменить критерии заявки?</label>
         <select id="crit_select" multiple disabled>
             <? foreach ($all_criteria as $key => $item): ?>
-                <option value="<?=$key?>"><?=$item?></option>
+                <option value="<?= $key ?>"><?= $item ?></option>
             <? endforeach; ?>
         </select>
         <a id="reject_yes" class="yes"><input type="hidden" value="">Отменить</a>

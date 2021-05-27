@@ -76,7 +76,7 @@ AppAsset::register($this);
     $items[] = Yii::$app->user->isGuest
         ? (['label' => 'Авторизация', 'url' => ['/main/login']])
         : (Yii::$app->user->identity->isAvailable('request_in_work')
-            ?['label' => 'Личный кабинет', 'items' => [
+            ?['label' => Yii::$app->user->identity->username, 'items' => [
                 ['label' => 'Профиль', 'url' => ['/profile']],
                 ['label' => 'Заявки в работе', 'url' => ['/profile/request-in-work']]
             ]]

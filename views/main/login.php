@@ -20,13 +20,15 @@ FormAsset::register($this);
     $form->field($model, 'username')->textInput([
         'autofocus' => true,
         'placeholder' => 'Введите логин',
-        'class' => 'input'
+        'class' => 'input',
+        'maxlength' => 50
     ])->label(false)->error(false) ?>
 
     <?=
     $form->field($model, 'password')->passwordInput([
         'placeholder' => 'Введите пароль',
-        'class' => 'input'
+        'class' => 'input',
+        'maxlength' => 256
     ])->label(false)->error(false) ?>
 
     <?= $form->field($model, 'rememberMe')->checkbox() ?>

@@ -17,35 +17,35 @@ FormAsset::register($this);
 
     <?=
     $form->field($model, 'last_name')
-        ->textInput(['placeholder' => 'Введите фамилию'])
+        ->textInput(['placeholder' => 'Введите фамилию', 'maxlength' => 50])
         ->label(false)
         ->error(false)
     ?>
 
     <?=
     $form->field($model, 'first_name')
-        ->textInput(['placeholder' => 'Введите имя'])
+        ->textInput(['placeholder' => 'Введите имя', 'maxlength' => 50])
         ->label(false)
         ->error(false)
     ?>
 
     <?=
     $form->field($model, 'middle_name')
-        ->textInput(['placeholder' => 'Введите отчество'])
+        ->textInput(['placeholder' => 'Введите отчество', 'maxlength' => 50])
         ->label(false)
         ->error(false)
     ?>
 
     <?=
     $form->field($model, 'username')
-        ->textInput(['placeholder' => 'Введите логин'])
+        ->textInput(['placeholder' => 'Введите логин', 'maxlength' => 50])
         ->label(false)
         ->error(false)
     ?>
 
     <?=
     $form->field($model, 'email')
-        ->textInput(['placeholder' => 'Введите электронную почту'])
+        ->textInput(['placeholder' => 'Введите электронную почту', 'maxlength' => 50])
         ->label(false)
         ->error(false)
     ?>
@@ -58,14 +58,14 @@ FormAsset::register($this);
 
     <?=
     $form->field($model, 'password')
-        ->textInput(['placeholder' => 'Введите новый пароль'])
+        ->textInput(['placeholder' => 'Введите новый пароль', 'maxlength' => 256])
         ->label(false)
         ->error(false)
     ?>
 
     <?=
     $form->field($model, 'repeat_password')
-        ->textInput(['placeholder' => 'Повторите пароль'])
+        ->textInput(['placeholder' => 'Повторите пароль', 'maxlength' => 256])
         ->label(false)
         ->error(false)
     ?>

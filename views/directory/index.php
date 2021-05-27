@@ -18,7 +18,7 @@ DirAsset::register($this);
 <?php $form = ActiveForm::begin(['id' => 'sub_form']); ?>
 <?=
 $form->field($model, 'text')
-    ->textInput(['class' => 'input', 'placeholder' => 'Введите '.$button_text])
+    ->textInput(['class' => 'input', 'placeholder' => 'Введите '.$button_text, 'maxlength' => 50])
     ->label(false)
     ->error(false)
 ?>

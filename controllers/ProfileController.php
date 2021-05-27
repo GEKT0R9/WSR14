@@ -113,13 +113,24 @@ class ProfileController extends Controller
                 !empty($value->after_img->file_content)?stream_get_contents($value->after_img->file_content):null;
             $requests[$key]['allow'] = ($value->status->type_id == 1);
             $requests[$key]['allow_del'] = ($user->isAvailable('del_request') && $value->status->type_id == 1);
+
+            $ctr = CommentToRequest::find()->where(['request_id' => $value['id']])->all();
+            $comment = [];
+            foreach ($ctr as $key2 => $value2) {
+                $comment[] = [
+                    'text' => $value2->comment,
+                    'date' => $value2->date,
+                    'role' => $value2->user->roles[0]->name
+                ];
+            }
+            $requests[$key]['comments'] = $comment;
         }
 
         return $this->render('index', [
             'fio' => implode(' ', $fio),
             'email' => $user->email,
             'requests' => $requests,
-            'first_letter' => mb_substr($fio[0], 0, 1) . mb_substr($fio[1], 0, 1),
+            'first_letter' => mb_strtoupper(mb_substr($fio[0], 0, 1) . mb_substr($fio[1], 0, 1)),
             'status' => $status,
             'pages' => $pages,
             'model' => $model,
@@ -227,6 +238,14 @@ class ProfileController extends Controller
             if (Yii::$app->user->identity->isAvailable('status_' . $request->status->id)) {
                 $model->image = UploadedFile::getInstance($model, 'image');
                 if ($model->validate()) {
+
+                    if (!empty($model->comment)) {
+                        $ctr = new CommentToRequest();
+                        $ctr->comment = $model->comment;
+                        $ctr->user_id = Yii::$app->user->id;
+                        $ctr->request_id = $model->id;
+                        $ctr->save();
+                    }
 
                     $img = FileRepository::createFile(
                         $model->image->name,

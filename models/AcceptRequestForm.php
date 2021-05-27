@@ -11,6 +11,7 @@ class AcceptRequestForm extends Model
 {
     public $id;
     public $image;
+    public $comment;
 
     public function attributeLabels()
     {
@@ -27,6 +28,7 @@ class AcceptRequestForm extends Model
         return [
             [['image','id'], 'required'],
             ['image', 'validateImage'],
+            ['comment', 'default'],
         ];
     }
 

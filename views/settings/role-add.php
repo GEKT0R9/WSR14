@@ -15,14 +15,14 @@ FormAsset::register($this);
 
     <?=
     $form->field($model, 'title')
-        ->textInput(['autofocus' => true, 'placeholder' => 'Введите название роли'])
+        ->textInput(['autofocus' => true, 'placeholder' => 'Введите название роли', 'maxlength' => 50])
         ->label(false)
         ->error(false)
     ?>
 
     <?=
     $form->field($model, 'description')
-        ->textarea(['placeholder' => 'Введите описание роли'])
+        ->textarea(['placeholder' => 'Введите описание роли', 'maxlength' => 100])
         ->label(false)
         ->error(false)
     ?>

@@ -82,6 +82,15 @@ ProfileAsset::register($this);
                         <? if ($value['allow_del']): ?>
                             <label class="del_but" data-toggle="modal" data-target="#del_modal">Удалить заявку</label>
                         <? endif; ?>
+                        <? if (!empty($value['comments'])): ?>
+                        <? foreach ($value['comments'] as $item): ?>
+                            <div class="comment">
+                                <h4><?= $item['role'] ?></h4>
+                                <h6><?= $item['date'] ?></h6>
+                                <p><?= $item['text'] ?></p>
+                            </div>
+                        <? endforeach; ?>
+                        <? endif; ?>
                     </div>
                 </div>
             </label>
