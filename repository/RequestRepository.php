@@ -34,8 +34,10 @@ class RequestRepository
             $requests[$key]['criterion'] = implode(', ', $criteria);
             $requests[$key]['status'] = $value->status->title;
             $requests[$key]['date'] = date('d.m.Y', strtotime($value->date));
-            $requests[$key]['before_img'] = $value->before_img->file_content;
-            $requests[$key]['after_img'] = $value->after_img->file_content;
+            $requests[$key]['before_img'] =
+                $value->before_img->file_content?stream_get_contents($value->before_img->file_content):null;
+            $requests[$key]['after_img'] =
+                $value->after_img->file_content?stream_get_contents($value->after_img->file_content):null;
         }
         return $requests;
     }
