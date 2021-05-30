@@ -52,7 +52,10 @@ AppAsset::register($this);
         if (count($dir_items) > 0) {
             $items[] = [
                 'label' => 'Справочники',
-                'items' => $dir_items
+                'items' => $dir_items,
+                'options' => [
+                    'class' => 'drop-list',
+                ],
             ];
         }
 
@@ -69,18 +72,26 @@ AppAsset::register($this);
         if (count($settings_items) > 0) {
             $items[] = [
                 'label' => 'Настройки',
-                'items' => $settings_items
+                'items' => $settings_items,
+                'options' => [
+                    'class' => 'drop-list',
+                ],
             ];
         }
     }
     $items[] = Yii::$app->user->isGuest
         ? (['label' => 'Авторизация', 'url' => ['/main/login']])
         : (Yii::$app->user->identity->isAvailable('request_in_work')
-            ?['label' => Yii::$app->user->identity->username, 'items' => [
-                ['label' => 'Профиль', 'url' => ['/profile']],
-                ['label' => 'Заявки в работе', 'url' => ['/profile/request-in-work']]
-            ]]
-            :['label' => 'Профиль', 'url' => ['/profile']]);
+            ? ['label' => Yii::$app->user->identity->username,
+                'items' => [
+                    ['label' => 'Профиль', 'url' => ['/profile']],
+                    ['label' => 'Заявки в работе', 'url' => ['/profile/request-in-work']]
+                ],
+                'options' => [
+                    'class' => 'drop-list',
+                ],
+            ]
+            : ['label' => Yii::$app->user->identity->username, 'url' => ['/profile']]);
     echo Nav::widget([
         'options' => ['class' => 'ul'],
         'items' => $items,

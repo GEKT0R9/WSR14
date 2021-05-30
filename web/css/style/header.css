@@ -7,6 +7,7 @@
     float: right;
     display: flex;
     font-size: 18px;
+    padding-bottom: 8px;
 }
 
 .ul>li {
@@ -52,4 +53,22 @@
 
 .navbar-toggle .icon-bar{
     background-color: #fff;
+}
+
+.drop-list .dropdown-menu{
+    left: initial;
+    right: 0;
+}
+
+@media screen and (max-width: 400px) {
+    .ul {
+        float: left;
+        display: flex;
+        flex-direction: column;
+        font-size: 18px;
+    }
+    .drop-list .dropdown-menu{
+        left: 0;
+        right: initial;
+    }
 }

@@ -12,12 +12,15 @@ IndexAsset::register($this);
     <div class="problems">
         <? foreach ($requests as $key => $value): ?>
             <div class="promlem" data-toggle="modal" data-target="#<?= 'modal' . $value['id'] ?>">
-                <div class="before img">
-                    <img src="data:image/png;base64,<?= $value['before_img'] ?>">
+                <div class="card_image">
+                    <div class="before img">
+                        <img src="data:image/png;base64,<?= $value['before_img'] ?>">
+                    </div>
+                    <div class="after img">
+                        <img src="data:image/png;base64,<?= $value['after_img'] ?>">
+                    </div>
                 </div>
-                <div class="after img">
-                    <img src="data:image/png;base64,<?= $value['after_img'] ?>">
-                </div>
+
                 <h2 class="title"><?= $value['title'] ?></h2>
                 <p class="description"><?= $value['description'] ?></p>
                 <div class="inform">
