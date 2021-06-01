@@ -1,0 +1,91 @@
+.access_form{
+    max-width: 1000px;
+    width: 100%;
+}
+
+.role_to_access{
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    grid-column-gap: 15px;
+}
+
+.role_to_access div{
+    max-width: 300px;
+    width: 100%;
+}
+
+.role_to_access div.access_info_all{
+    max-width: 100%;
+    height: 50vh;
+    overflow: auto;
+    margin: 0 auto;
+}
+
+.access_info_all div{
+    max-width: 100%;
+}
+
+@media screen and (max-width: 1049px) {
+
+    .access_info h2{
+        font-size: 24px;
+    }
+
+    .access_info h3{
+        font-size: 20px;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .role_to_access{
+        display: grid;
+        grid-template-areas: "access description" "role description";
+    }
+
+    .all_access_list{
+        grid-area: access;
+    }
+
+    .role_access_list{
+        grid-area: role;
+        /*margin-top: -50%;*/
+    }
+
+    .role_to_access div.access_info_all {
+        grid-area: description;
+        height: 65vh;
+    }
+}
+
+@media screen and (max-width: 499px) {
+    .role_to_access{
+        display: grid;
+        grid-template-areas: "description" "access" "role";
+        grid-template-rows: 1fr;
+        grid-row-gap: 50px;
+        grid-column-gap: 0;
+        width: max-content;
+        margin: 0 auto;
+    }
+
+    .role_to_access div{
+        margin: 0 auto;
+    }
+
+    .all_access_list{
+        grid-area: access;
+    }  
+    
+    .access_info_all div{
+        max-width: 70vw;
+    }
+
+    .role_access_list{
+        grid-area: role;
+    }
+
+    .role_to_access div.access_info_all{
+        grid-area: description;
+        height: 20vh;
+    }
+}

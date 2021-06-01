@@ -32,10 +32,12 @@ a:hover {
 }
 
 .user_info {
-    width: 1000px;
+    width: 75%;
+    max-width: 1000px;
     display: grid;
     grid-template-areas: "img fio edit" " img mail exit";
     grid-template-columns: 1fr 5fr 1fr;
+    grid-column-gap: 2vw;
     margin: 25px auto;
     /* border: 1px solid black; */
 }
@@ -113,7 +115,8 @@ a:hover {
 }
 
 .problems {
-    width: 1000px;
+    width: 75%;
+    max-width: 1000px;
     min-height: 64.5vh;
     height: max-content;
     margin: 10px auto;
@@ -136,6 +139,9 @@ a:hover {
 
 .title {
     grid-area: title;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .status {
@@ -170,10 +176,12 @@ footer {
 
 .info_menu {
     position: fixed;
+    overflow: auto;
     z-index: 2;
     top: 0;
-    right: -33%;
-    width: 33%;
+    right: -100%;
+    width: max-content;
+    max-width: 80vw;
     height: 100%;
     background: #596e79;
     transition: .5s right ease;
@@ -201,37 +209,44 @@ footer {
     display: none;
 }
 
-#info_menu:checked~.info_menu {
+#info_menu:checked ~ .info_menu {
     right: 0%;
 }
 
-#info_menu:checked~.bg {
+#info_menu:checked ~ .bg {
     opacity: 1;
     visibility: inherit;
 }
-.images{
+
+.images {
     width: 100%;
-    height: 300px;
+    max-height: 300px;
+    height: 50vw;
 }
+
 .img {
     background: #596e79;
     overflow: hidden;
     width: 100%;
-    height: 300px;
-    position: absolute;
+    height: 100%;
+    position: relative;
     border-radius: 5px;
     text-align: center;
 }
 
 .img img {
-    /* width: 100%; */
-    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
 }
 
 .after {
     /* background: rgb(201, 201, 201); */
     cursor: pointer;
     transition: .2s opacity;
+    top: -100%;
 }
 
 .after:hover {
@@ -261,9 +276,10 @@ footer {
 .del_but {
     display: block;
     width: max-content;
-    margin: 25px auto;
+    margin: 5px auto;
+    font-size: 18px;
     color: rgb(140, 0, 0);
-    padding: 10px 25px;
+    padding: 5px 15px;
     border: 1px solid rgba(211, 0, 0, 0);
     transition: .3s border ease;
 }
@@ -297,24 +313,24 @@ footer {
     visibility: hidden;
 }
 
-#del:checked~.bg2,
-#accept:checked~.bg3,
-#reject:checked~.bg4 {
+#del:checked ~ .bg2,
+#accept:checked ~ .bg3,
+#reject:checked ~ .bg4 {
     opacity: 1;
     visibility: inherit;
 }
 
-#del:checked~.del_window {
+#del:checked ~ .del_window {
     opacity: 1;
     visibility: inherit;
 }
 
-#accept:checked~.accept_window {
+#accept:checked ~ .accept_window {
     opacity: 1;
     visibility: inherit;
 }
 
-#reject:checked~.reject_window {
+#reject:checked ~ .reject_window {
     opacity: 1;
     visibility: inherit;
 }
@@ -352,23 +368,26 @@ footer {
 }
 
 .status_but {
-    margin-top: 10px;
+    margin: 10px 5px 0;
     text-align: center;
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: auto auto;
+    grid-column-gap: 10px;
 }
 
-.status_but label {
+.status_but label, .status_but a {
     display: block;
     width: max-content;
-    margin: 25px auto;
+    font-size: 18px;
+    margin: 5px auto;
     color: #c7b198;
-    padding: 10px 25px;
+    padding: 5px 15px;
     border: 1px solid rgba(211, 0, 0, 0);
     transition: .3s border ease;
+    font-weight: 700;
 }
 
-.status_but label:hover {
+.status_but label:hover, .status_but a:hover {
     border: 1px solid #c7b198;
 }
 
@@ -402,7 +421,8 @@ input[type="file"].file_input {
     height: 35px;
 }
 
-#file_name {}
+#file_name {
+}
 
 label.file_label {
     margin-top: 10px;
@@ -438,4 +458,191 @@ textarea {
     transition: .2s border-bottom ease;
     text-align: center;
     resize: none;
+    user-select: auto;
+}
+
+.comment div {
+    display: grid;
+    grid-template-columns: auto auto;
+}
+
+.comment h4 {
+    text-align: left;
+    font-size: 20px;
+    margin: 0;
+}
+
+.comment h6 {
+    text-align: right;
+    margin: 5px 0 0 0;
+    font-size: 14px;
+}
+
+.comment p {
+    max-width: 300px;
+    margin: 5px 0 0 0;
+    font-size: 16px;
+    word-wrap: break-word;
+}
+
+@media screen and (max-width: 767px) {
+    .user_img {
+        width: 75px;
+        height: 75px;
+    }
+
+    .user_img p {
+        font-size: 35px;
+    }
+
+    .fio {
+        margin-top: 15px;
+        font-size: 20px;
+    }
+
+    .edit {
+        margin-top: 20px;
+        font-size: 14px;
+    }
+
+    .exit {
+        font-size: 14px;
+    }
+}
+
+@media screen and (max-width: 499px) {
+    .user_img {
+        width: 10vw;
+        height: 10vw;
+    }
+
+    .user_img p {
+        font-size: 5vw;
+    }
+
+    .fio {
+        margin-top: 0.3vw;
+        font-size: 4vw;
+    }
+
+    .edit {
+        margin-top: 1vw;
+        font-size: 3vw;
+    }
+
+    .mail {
+        font-size: 3.5vw;
+    }
+
+    .exit {
+        font-size: 3vw;
+    }
+
+    .form-group {
+        height: 15px;
+    }
+
+    .filt {
+        width: 100px;
+        font-size: 14px;
+        height: max-content;
+    }
+
+
+    .title {
+        font-size: 16px;
+    }
+
+    .status {
+        margin-right: 10px;
+        font-size: 16px;
+    }
+
+    .description {
+        font-size: 14px;
+    }
+
+    .category {
+        margin-right: 10px;
+        font-size: 10px;
+    }
+
+    .date {
+        font-size: 10px;
+    }
+
+    .description_menu {
+        margin-top: 10px;
+        font-size: 16px;
+        word-break: break-all;
+    }
+
+    .status_menu {
+        margin-top: 15px;
+    }
+
+    .inform {
+        margin-top: 15px;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .date_menu {
+        text-align: right;
+    }
+
+    .title_menu {
+        font-size: 4.5vw;
+    }
+
+    .description_menu {
+        margin-top: 2vw;
+        font-size: 3vw;
+    }
+
+    .status_menu {
+        font-size: 4.5vw;
+        margin-top: 2vw;
+    }
+
+    .inform {
+        margin-top: 2vw;
+        font-size: 3vw;
+    }
+
+    .date_menu {
+        text-align: right;
+    }
+
+    .del_but {
+        font-size: 3vw;
+        margin: 3vw auto;
+    }
+
+    .status_but label, .status_but a {
+        font-size: 3vw;
+        margin: 1vw auto;
+        padding: 1vw 3vw;
+    }
+
+
+    .comments hr {
+        margin-top: 4vw;
+        margin-bottom: 4vw;
+    }
+
+    .comment h4 {
+        font-size: 4vw;
+        margin: 0;
+    }
+
+    .comment h6 {
+        margin: 1vw 0 0 0;
+        font-size: 3vw;
+    }
+
+    .comment p {
+        margin: 1vw 0 0 0;
+        font-size: 3vw;
+    }
 }

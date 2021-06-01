@@ -19,8 +19,10 @@ $(document).ready(function () {
         $('#access_role_list option').prop('selected', true);
     })
 
-    $('#access_role_list option, #access_all_list option').click(function () {
+    $('#access_role_list, #access_all_list').click(function () {
         $('.access_info').addClass('hidden');
-        $('#access_' + $(this).val()).removeClass('hidden');
+        for (let item in $(this).val()) {
+            $('#access_' + $(this).val()[item]).removeClass('hidden');
+        }
     })
 })

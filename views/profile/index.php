@@ -71,25 +71,31 @@ ProfileAsset::register($this);
                         </div>
                         <? if ($value['allow']): ?>
                             <div class="status_but">
-                                <label data-toggle="modal" data-target="#accept_modal" >Принять</label>
+                                <label data-toggle="modal" data-target="#accept_modal">Принять</label>
                                 <? if ($value['type_id'] == 1): ?>
-                                    <label><?= Html::a('Редактировать', ['edit-request', 'id' => $value['id']]) ?></label>
+                                    <?= Html::a('Редактировать', ['edit-request', 'id' => $value['id']]) ?>
                                 <? else: ?>
                                     <label data-toggle="modal" data-target="#reject_modal">Отменить</label>
                                 <? endif; ?>
                             </div>
                         <? endif; ?>
                         <? if ($value['allow_del']): ?>
-                            <label class="del_but" data-toggle="modal" data-target="#del_modal">Удалить заявку</label>
+                            <label class="del_but" data-toggle="modal" data-target="#del_modal">Удалить
+                                заявку</label>
                         <? endif; ?>
                         <? if (!empty($value['comments'])): ?>
-                        <? foreach ($value['comments'] as $item): ?>
-                            <div class="comment">
-                                <h4><?= $item['role'] ?></h4>
-                                <h6><?= $item['date'] ?></h6>
-                                <p><?= $item['text'] ?></p>
+                            <div class="comments">
+                                <? foreach ($value['comments'] as $item): ?>
+                                    <hr>
+                                    <div class="comment">
+                                        <div>
+                                            <h4><?= $item['role'] ?></h4>
+                                            <h6><?= $item['date'] ?></h6>
+                                        </div>
+                                        <p><?= $item['text'] ?></p>
+                                    </div>
+                                <? endforeach; ?>
                             </div>
-                        <? endforeach; ?>
                         <? endif; ?>
                     </div>
                 </div>

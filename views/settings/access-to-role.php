@@ -6,16 +6,16 @@ use yii\bootstrap\ActiveForm;
 use yii\helpers\Html;
 
 $this->title = $title;
-RoleToAccessAsset::register($this);
 FormAsset::register($this);
+RoleToAccessAsset::register($this);
 ?>
 <div class="content">
     <div class="access_form form">
         <h1><?= Html::encode($this->title) ?></h1>
 
         <?php $form = ActiveForm::begin(); ?>
-        <div style="display: grid; grid-template-columns: 3fr 1fr 3fr;">
-            <div>
+        <div class="role_to_access">
+            <div class="all_access_list">
                 <?=
                 $form->field($model, 'all_access_list')
                     ->listBox($all_list, ['id' => 'access_all_list', 'multiple' => 'true'])
@@ -30,7 +30,7 @@ FormAsset::register($this);
                     </div>
                 <? endforeach; ?>
             </div>
-            <div>
+            <div class="role_access_list">
                 <?=
                 $form->field($model, 'role_access_list')
                     ->listBox($role_list, ['id' => 'access_role_list', 'multiple' => 'true']);

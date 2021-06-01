@@ -19,7 +19,8 @@ a {
 
 .site-login {
     text-align: center;
-    width: 400px;
+    max-width: 400px;
+    width: 100%;
     height: max-content;
     padding: 25px 10px;
     margin: 50px auto;
@@ -85,11 +86,10 @@ footer {
     position: absolute;
     bottom: 0;
 }
-.checkbox{
+
+.checkbox {
     font-size: 16px;
 }
-
-
 
 
 .file_input .form-group {
@@ -104,7 +104,8 @@ footer {
     outline: 0;
     opacity: 0;
     pointer-events: none;
-    user-select: none
+    user-select: none;
+    width: 0;
 }
 
 .file_input .label {
@@ -141,11 +142,8 @@ footer {
 }
 
 
-
-
 .form {
     text-align: center;
-    min-width: 400px;
     max-width: 700px;
     height: max-content;
     padding: 25px 10px;
@@ -155,10 +153,12 @@ footer {
 .form h1 {
     margin-bottom: 20px;
 }
+
 .form-control {
     display: block;
     margin: 0 auto;
-    width: 400px;
+    max-width: 400px;
+    width: 100%;
     font-size: 24px;
     padding: 5px;
     border: none;
@@ -170,7 +170,7 @@ footer {
     box-shadow: none;
 }
 
-.has-error .form-control{
+.has-error .form-control {
     box-shadow: none;
 }
 
@@ -202,19 +202,22 @@ footer {
 
 .form textarea {
     font-size: 24px;
-    width: 700px;
+    max-width: 700px;
+    width: 100%;
     height: 352px;
     border: none;
     border-bottom: 1px solid black;
     transition: .2s border-bottom ease;
     text-align: center;
     resize: none;
+    user-select: auto;
 }
 
 .select {
     text-align: center;
     margin: 25px auto;
-    width: 250px;
+    max-width: 250px;
+    width: 100%;
     font-size: 20px;
     border: none;
     border-bottom: 1px solid black;
@@ -236,7 +239,18 @@ footer {
     border: 1px solid #00e0d0;
 }
 
-.access_form{
-    max-width: initial;
-}
+@media screen and (max-width: 499px) {
 
+    .form h1 {
+        font-size: 24px;
+    }
+
+    .form-control {
+        font-size: 18px;
+    }
+
+    .form textarea {
+        font-size: 18px;
+    }
+
+}

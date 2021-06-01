@@ -6,9 +6,9 @@ class RoleToAccessAsset extends AppAsset
 {
     public $basePath = '@webroot';
     public $baseUrl = '@web';
-//    public $css = [
-//        'css/profile_style/main.css',
-//    ];
+    public $css = [
+        'css/settings/rta.css',
+    ];
     public $js = [
         'js/role-access.js'
     ];
