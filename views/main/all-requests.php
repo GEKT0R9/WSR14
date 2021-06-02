@@ -2,13 +2,13 @@
 
 /* @var $this yii\web\View */
 
-use app\assets\IndexAsset;
+use app\assets\AllRequestsAsset;
 use yii\bootstrap\Modal;
-use yii\helpers\Html;
 use yii\helpers\Url;
+use yii\widgets\LinkPager;
 
-$this->title = 'Главная';
-IndexAsset::register($this);
+$this->title = 'Все решённые заявки';
+AllRequestsAsset::register($this);
 ?>
 <div class="content">
     <div class="problems">
@@ -57,21 +57,12 @@ IndexAsset::register($this);
             <?php $modal->end(); ?>
         <? endforeach; ?>
     </div>
-    <div class="second_grid">
-        <div class="counter">
-            <h3>Проблем решено:</h3>
-            <p id="counter"><?= $count ?></p>
-        </div>
-        <? if (!Yii::$app->user->isGuest && Yii::$app->user->identity->isAvailable('notice') && !empty($notice_count)): ?>
-            <a class="notice_a" href="/profile/request-in-work">
-                <div class="notice">
-                    <h3>Нерешённых заявок:</h3>
-                    <p><?= $notice_count ?></p>
-                </div>
-            </a>
-        <? endif; ?>
+    <div>
+        <?= LinkPager::widget([
+            'pagination' => $pages,
+        ]); ?>
     </div>
-    <?= Html::a('Все заявки', ['/main/all-requests'], ['class' => 'a_all_req']) ?>
 </div>
+
 
 

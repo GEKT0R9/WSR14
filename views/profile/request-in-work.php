@@ -20,10 +20,14 @@ ProfileAsset::register($this);
     <input type="checkbox" id="info_menu">
 
     <div class="problems">
-        <?php $form = ActiveForm::begin(['id' => 'sub_form']); ?>
-        <?= $form->field($model, 'status_filt')->dropDownList($status, ['class' => 'filt'])->label(false) ?>
-        <?= $form->field($model, 'criteria_filt')->dropDownList($criteria, ['class' => 'filt'])->label(false) ?>
-        <?php ActiveForm::end(); ?>
+        <? if (!empty($requests) || !empty($model->status_filt) || !empty($model->criteria_filt)): ?>
+            <?php $form = ActiveForm::begin(['id' => 'sub_form']); ?>
+            <?= $form->field($model, 'status_filt')->dropDownList($status, ['class' => 'filt'])->label(false) ?>
+            <?= $form->field($model, 'criteria_filt')->dropDownList($criteria, ['class' => 'filt'])->label(false) ?>
+            <?php ActiveForm::end(); ?>
+        <?else:?>
+            <h3 class="text-center">В данный момент заявок нет</h3>
+        <? endif; ?>
         <? foreach ($requests as $key => $value) : ?>
             <label class="problem" for="info_menu" id="problem_<?= $value['id'] ?>_<?= $value['type_id'] ?>">
                 <h2 class="title"><?= $value['title'] ?></h2>
@@ -50,7 +54,7 @@ ProfileAsset::register($this);
                         </div>
                         <? if ($value['allow']): ?>
                             <div class="status_but">
-                                <label data-toggle="modal" data-target="#accept_modal">Принять</label>
+                                <label data-toggle="modal" data-target="#accept_modal"><?=$value['allow_button_title']?></label>
                                 <label data-toggle="modal" data-target="#reject_modal">Отменить</label>
                             </div>
                         <? endif; ?>

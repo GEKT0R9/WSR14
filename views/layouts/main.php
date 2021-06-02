@@ -85,20 +85,29 @@ AppAsset::register($this);
             ? ['label' => Yii::$app->user->identity->username,
                 'items' => [
                     ['label' => 'Профиль', 'url' => ['/profile']],
+                    ['label' => 'Ваши заявки', 'url' => ['/profile/requests']],
                     ['label' => 'Заявки в работе', 'url' => ['/profile/request-in-work']]
                 ],
                 'options' => [
                     'class' => 'drop-list',
                 ],
             ]
-            : ['label' => Yii::$app->user->identity->username, 'url' => ['/profile']]);
+            : ['label' => Yii::$app->user->identity->username,
+                'items' => [
+                    ['label' => 'Профиль', 'url' => ['/profile']],
+                    ['label' => 'Ваши заявки', 'url' => ['/profile/requests']],
+                ],
+                'options' => [
+                    'class' => 'drop-list',
+                ]
+            ]
+        );
     echo Nav::widget([
         'options' => ['class' => 'ul'],
         'items' => $items,
     ]);
     NavBar::end();
     ?>
-
 
     <?= Breadcrumbs::widget([
         'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],

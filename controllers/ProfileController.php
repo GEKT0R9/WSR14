@@ -35,7 +35,6 @@ class ProfileController extends Controller
      */
     public function actionIndex()
     {
-        Url::remember();
         if (Yii::$app->user->isGuest) {
             return $this->redirect('main/login');
         }
@@ -46,6 +45,26 @@ class ProfileController extends Controller
         if ($user->middle_name) {
             $fio[] = $user->middle_name;
         }
+
+        return $this->render('profile', [
+            'fio' => implode(' ', $fio),
+            'email' => $user->email,
+            'first_letter' => mb_strtoupper(mb_substr($fio[0], 0, 1) . mb_substr($fio[1], 0, 1)),
+        ]);
+    }
+
+    /**
+     * Страница "Профиль"
+     * @return string|Response
+     */
+    public function actionRequests()
+    {
+        Url::remember();
+        if (Yii::$app->user->isGuest) {
+            return $this->redirect('main/login');
+        }
+        $user = Yii::$app->user->identity;
+
         $options = [];
         $options['create_user_id'] = Yii::$app->user->id;
 
@@ -124,11 +143,8 @@ class ProfileController extends Controller
             $requests[$key]['comments'] = $comment;
         }
 
-        return $this->render('index', [
-            'fio' => implode(' ', $fio),
-            'email' => $user->email,
+        return $this->render('requests', [
             'requests' => $requests,
-            'first_letter' => mb_strtoupper(mb_substr($fio[0], 0, 1) . mb_substr($fio[1], 0, 1)),
             'status' => $status,
             'pages' => $pages,
             'model' => $model,
@@ -167,7 +183,7 @@ class ProfileController extends Controller
                     Yii::$app->user->id
                 );
 
-                return $this->redirect('/profile');
+                return $this->redirect('requests');
 
             }
         }
@@ -197,7 +213,7 @@ class ProfileController extends Controller
             $request->title = $model->title;
             $request->description = $model->description;
             $request->save();
-            return $this->redirect('/profile');
+            return $this->redirect('requests');
         }
         $model->title = $request->title;
         $model->description = $request->description;
@@ -275,15 +291,7 @@ class ProfileController extends Controller
         $post = Yii::$app->request->post();
         $request = RequestRepository::getRequestsFind(['id' => $post['id']])->one();
         if (Yii::$app->user->identity->isAvailable('status_' . $request->status->id)) {
-            if (!empty($post['criteria'])) {
-                RequestToCriterion::deleteAll(['request_id' => $post['id']]);
-                foreach ($post['criteria'] as $item) {
-                    $rtc = new RequestToCriterion();
-                    $rtc->request_id = $post['id'];
-                    $rtc->criterion_id = $item;
-                    $rtc->save();
-                }
-            }
+
             if (!empty($post['comment'])) {
                 $ctr = new CommentToRequest();
                 $ctr->comment = $post['comment'];
@@ -291,11 +299,24 @@ class ProfileController extends Controller
                 $ctr->request_id = $post['id'];
                 $ctr->save();
             }
-            if ($request->status->order == 2) {
-                $request->status_id = StatusOrder::find()->where(['type_id' => 5])->one()->id;
+
+            if (!empty($post['criteria'])) {
+                RequestToCriterion::deleteAll(['request_id' => $post['id']]);
+                foreach ($post['criteria'] as $item) {
+                    $rtc = new RequestToCriterion();
+                    $rtc->request_id = $post['id'];
+                    $rtc->criterion_id = $item;
+                    $rtc->save();
+                    $request->status_id = StatusOrder::find()->where(['order' => 2])->one()->id;
+                }
             } else {
-                $request->status_id = StatusOrder::find()->where(['order' => $request->status->order - 1])->one()->id;
+                if ($request->status->order == 2) {
+                    $request->status_id = StatusOrder::find()->where(['type_id' => 5])->one()->id;
+                } else {
+                    $request->status_id = StatusOrder::find()->where(['order' => $request->status->order - 1])->one()->id;
+                }
             }
+
             $request->save();
             return 'Статус изменён';
         }
@@ -345,6 +366,14 @@ class ProfileController extends Controller
                 $sts[] = $key;
                 $status[$key] = $val;
             }
+        }
+        if (Yii::$app->user->identity->isAvailable('status_complete')) {
+            $sts[] = 4;
+            $status[4] = 'Решена';
+        }
+        if (Yii::$app->user->identity->isAvailable('status_denied')) {
+            $sts[] = 5;
+            $status[5] = 'Отклонено';
         }
 
         $criterion_array = DirRepository::getCriterionAsArray();
@@ -420,6 +449,16 @@ class ProfileController extends Controller
                 Yii::$app->user->identity->isAvailable('del_request')
                 && $value->status->type_id == 1
             );
+            $stor = StatusOrder::find()->where(['order' => $value->status->order + 1])->one()->type_id;
+
+            $allow_button_title = 'Принять';
+            if ($stor == 3) {
+                $allow_button_title = 'В работу';
+            }
+            if ($stor == 4) {
+                $allow_button_title = 'Выполнить';
+            }
+            $requests[$key]['allow_button_title'] = $allow_button_title;
         }
 
         return $this->render('request-in-work', [

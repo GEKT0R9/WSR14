@@ -19,33 +19,17 @@ ProfileAsset::register($this);
 <div class="content">
     <input type="checkbox" id="info_menu">
 
-    <div class="user_info">
-        <div class="user_img">
-            <p><?= $first_letter ?></p>
-        </div>
-
-        <h3 class="fio"><?= $fio ?></h3>
-        <?= Html::a(
-            'Редактировать',
-            ['settings/user-edit', 'id' => Yii::$app->user->id],
-            ['class' => 'edit']
-        ) ?>
-        <p class="mail"><?= $email ?></p>
-
-        <div class="exit">
-
-            <?= Html::beginForm(['/main/logout'], 'post') ?>
-            <?= Html::submitButton('выйти') ?>
-            <?= Html::endForm() ?>
-        </div>
-    </div>
     <?= Html::a('Создать заявку', '/profile/create-request', ['class' => 'create']) ?>
 
     <div class="problems">
-        <?php $form = ActiveForm::begin(['id' => 'sub_form']); ?>
-        <?= $form->field($model, 'status_filt')->dropDownList($status, ['class' => 'filt'])->label(false) ?>
-        <?= $form->field($model, 'criteria_filt')->dropDownList($criteria, ['class' => 'filt'])->label(false) ?>
-        <?php ActiveForm::end(); ?>
+        <? if (!empty($requests) || !empty($model->status_filt) || !empty($model->criteria_filt)): ?>
+            <?php $form = ActiveForm::begin(['id' => 'sub_form']); ?>
+            <?= $form->field($model, 'status_filt')->dropDownList($status, ['class' => 'filt'])->label(false) ?>
+            <?= $form->field($model, 'criteria_filt')->dropDownList($criteria, ['class' => 'filt'])->label(false) ?>
+            <?php ActiveForm::end(); ?>
+        <? else: ?>
+            <h3 class="text-center">В данный момент заявок нет</h3>
+        <? endif; ?>
         <? foreach ($requests as $key => $value) : ?>
             <label class="problem" for="info_menu" id="problem_<?= $value['id'] ?>_<?= $value['type_id'] ?>">
                 <h2 class="title"><?= $value['title'] ?></h2>
@@ -81,8 +65,7 @@ ProfileAsset::register($this);
                             </div>
                         <? endif; ?>
                         <? if ($value['allow_del']): ?>
-                            <label class="del_but" data-toggle="modal" data-target="#del_modal">Удалить
-                                заявку</label>
+                            <label class="del_but" data-toggle="modal" data-target="#del_modal">Удалить заявку</label>
                         <? endif; ?>
                         <? if (!empty($value['comments'])): ?>
                             <div class="comments">

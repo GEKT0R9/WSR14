@@ -11,6 +11,7 @@ use app\repository\DirRepository;
 use app\repository\RequestRepository;
 use app\repository\UserRepository;
 use Yii;
+use yii\data\Pagination;
 use yii\web\Controller;
 use app\models\LoginForm;
 use yii\web\Response;
@@ -97,6 +98,50 @@ class MainController extends Controller
     {
         return RequestRepository::getCountRequests([
             'status_id' => StatusOrder::find()->where(['type_id' => 4])->one()->id
+        ]);
+    }
+
+    /**
+     * Страница "авторизация"
+     * @return string|Response
+     */
+    public function actionAllRequests()
+    {
+        $db_requests = RequestRepository::getRequestsFind(['status_id' => 4]);
+        $pages = new Pagination(['totalCount' => $db_requests->count(), 'pageSize' => 10]);
+        $db_requests = $db_requests->offset($pages->offset)->limit($pages->limit)->all();
+
+        $requests = [];
+        foreach ($db_requests as $key => $value) {
+            $criteria = [];
+            foreach ($value->criteria as $item) {
+                $criteria[] = $item->criterion;
+            }
+            $requests[$key]['id'] = $value->id;
+            $requests[$key]['title'] = $value->title;
+            $requests[$key]['description'] = $value->description;
+            $requests[$key]['criterion'] = implode(', ', $criteria);
+            $requests[$key]['type_id'] = $value->status->type_id;
+            $requests[$key]['status'] = $value->status->title;
+            $requests[$key]['date'] = date('d.m.Y', strtotime($value->date));
+            $requests[$key]['before_img'] = $value->before_img_id;
+            $requests[$key]['after_img'] = $value->after_img_id;
+
+            $ctr = CommentToRequest::find()->where(['request_id' => $value['id']])->all();
+            $comment = [];
+            foreach ($ctr as $key2 => $value2) {
+                $comment[] = [
+                    'text' => $value2->comment,
+                    'date' => $value2->date,
+                    'role' => $value2->user->roles[0]->name
+                ];
+            }
+            $requests[$key]['comments'] = $comment;
+        }
+
+        return $this->render('all-requests', [
+            'requests' => $requests,
+            'pages' => $pages,
         ]);
     }
 

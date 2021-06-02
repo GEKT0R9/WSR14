@@ -5,7 +5,7 @@
 
 .role_to_access{
     display: grid;
-    grid-template-columns: auto 1fr auto;
+    grid-template-columns: 1fr 2fr 1fr;
     grid-column-gap: 15px;
 }
 
