@@ -5,6 +5,7 @@ namespace app\controllers;
 use app\entity\Access;
 use app\models\DirectoryForm;
 use app\repository\DirRepository;
+use app\repository\FileRepository;
 use app\repository\RequestRepository;
 use Throwable;
 use Yii;
@@ -27,6 +28,14 @@ class DirectoryController extends Controller
                 'class' => 'yii\web\ErrorAction',
             ],
         ];
+    }
+
+    public function actionImg($id)
+    {
+        $file = FileRepository::getFileById($id);
+        header("Content-type: " . $file->permission);
+        print stream_get_contents($file->file_content);
+        exit;
     }
 
     /**
@@ -165,7 +174,7 @@ class DirectoryController extends Controller
                 }
                 $query = DirRepository::getFindCriterion();
                 $query->where(['id' => $id])->one()->delete();
-                Access::find()->where(['access' => 'criterion_'.$id])->one()->delete();
+                Access::find()->where(['access' => 'criterion_' . $id])->one()->delete();
                 break;
             case 'status':
                 if (!Yii::$app->user->identity->isAvailable('dir_del_status_type')) {

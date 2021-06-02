@@ -4,6 +4,7 @@
 
 use app\assets\IndexAsset;
 use yii\bootstrap\Modal;
+use yii\helpers\Url;
 
 $this->title = 'Главная';
 IndexAsset::register($this);
@@ -14,10 +15,10 @@ IndexAsset::register($this);
             <div class="promlem" data-toggle="modal" data-target="#<?= 'modal' . $value['id'] ?>">
                 <div class="card_image">
                     <div class="before img">
-                        <img src="data:image/png;base64,<?= $value['before_img'] ?>">
+                        <img src="<?= Url::to(['/directory/img', 'id' => $value['before_img']]) ?>">
                     </div>
                     <div class="after img">
-                        <img src="data:image/png;base64,<?= $value['after_img'] ?>">
+                        <img src="<?= Url::to(['/directory/img', 'id' => !empty($value['after_img']) ? $value['after_img'] : $value['before_img']]) ?>">
                     </div>
                 </div>
 
@@ -34,10 +35,10 @@ IndexAsset::register($this);
             ]); ?>
             <div class="modal_images">
                 <div class="modal_img before img">
-                    <img src="data:image/png;base64,<?= $value['before_img'] ?>">
+                    <img src="<?= Url::to(['/directory/img', 'id' => $value['before_img']]) ?>">
                 </div>
                 <div class="modal_img after img">
-                    <img src="data:image/png;base64,<?= $value['after_img'] ?>">
+                    <img src="<?= Url::to(['/directory/img', 'id' => !empty($value['after_img']) ? $value['after_img'] : $value['before_img']]) ?>">
                 </div>
             </div>
             <p class="modal_description"><?= $value['description'] ?></p>

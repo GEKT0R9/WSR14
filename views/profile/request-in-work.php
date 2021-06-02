@@ -9,6 +9,7 @@ use app\assets\ProfileAsset;
 use yii\bootstrap\Modal;
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
+use yii\helpers\Url;
 use yii\widgets\LinkPager;
 
 $this->title = 'Профиль';
@@ -34,10 +35,10 @@ ProfileAsset::register($this);
                     <div class="info_menu">
                         <div class="images">
                             <div class="before img">
-                                <img src="data:image/png;base64,<?= $value['before_img'] ?>">
+                                <img src="<?= Url::to(['/directory/img', 'id' => $value['before_img']]) ?>">
                             </div>
                             <div class="after img">
-                                <img src="data:image/png;base64,<?= !empty($value['after_img']) ? $value['after_img'] : $value['before_img'] ?>">
+                                <img src="<?= Url::to(['/directory/img', 'id' => !empty($value['after_img']) ? $value['after_img'] : $value['before_img']]) ?>">
                             </div>
                         </div>
                         <h2 class="title_menu"><?= $value['title'] ?></h2>
