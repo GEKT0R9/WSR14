@@ -21,13 +21,13 @@ FormAsset::register($this);
 
     <?=
     $form->field($model, 'last_name')
-        ->textInput(['autofocus' => true, 'class' => 'input', 'placeholder' => 'Введите ваше имя', 'maxlength' => 50])
+        ->textInput(['autofocus' => true, 'class' => 'input', 'placeholder' => 'Введите вашу фамилию', 'maxlength' => 50])
         ->label(false)
         ->error(false)
     ?>
     <?=
     $form->field($model, 'first_name')
-        ->textInput(['class' => 'input', 'placeholder' => 'Введите вашу фамилию', 'maxlength' => 50])
+        ->textInput(['class' => 'input', 'placeholder' => 'Введите ваше имя', 'maxlength' => 50])
         ->label(false)
         ->error(false)
     ?>
