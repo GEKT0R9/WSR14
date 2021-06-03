@@ -20,6 +20,8 @@ $(document).ready(function () {
             $('#status_type').val(id[2]);
             if (id[2] !== "3") {
                 $('#accept_form').addClass('hidden');
+            } else if(id[2] === "3"){
+                $('#accept_form').removeClass('hidden');
             }
             $('.content > .info_menu').replaceWith($(this).find('.info_menu').clone());
 

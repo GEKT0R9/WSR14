@@ -71,7 +71,9 @@ IndexAsset::register($this);
             </a>
         <? endif; ?>
     </div>
-    <?= Html::a('Все заявки', ['/main/all-requests'], ['class' => 'a_all_req']) ?>
+    <? if ($count > 4): ?>
+        <?= Html::a('Все заявки', ['/main/all-requests'], ['class' => 'a_all_req']) ?>
+    <? endif; ?>
 </div>
 
 
