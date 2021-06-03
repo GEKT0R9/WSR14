@@ -449,7 +449,10 @@ class ProfileController extends Controller
                 Yii::$app->user->identity->isAvailable('del_request')
                 && $value->status->type_id == 1
             );
-            $stor = StatusOrder::find()->where(['order' => $value->status->order + 1])->one()->type_id;
+            $stor = StatusOrder::find()->where(['order' => $value->status->order + 1])->one();
+            if (!empty($stor)) {
+                $stor = $stor->type_id;
+            }
 
             $allow_button_title = 'Принять';
             if ($stor == 3) {
