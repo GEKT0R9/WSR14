@@ -392,8 +392,8 @@ footer {
 }
 
 .accept_window .yes {
-    color: #968067;
-    border: 1px solid #968067;
+    color: rgb(0, 140, 0);
+    border: 1px solid rgb(0, 140, 0);
 }
 
 .yes {

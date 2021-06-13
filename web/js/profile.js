@@ -81,7 +81,6 @@ $(document).ready(function () {
     })
 
     $('#crt').click(function () {
-        console.log($('#crit_select').val());
         if ($('#crit_select').attr('disabled') === 'disabled') {
             $('#crit_select').prop('disabled', false);
             $('#crit_select option').prop('selected', false);

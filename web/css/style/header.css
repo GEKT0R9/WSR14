@@ -60,11 +60,55 @@
     right: 0;
 }
 
+.yes_no{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin: 0 15%;
+}
+
+.bton{
+    display: block;
+    width: max-content;
+    margin: 5px auto;
+    background-color: rgba(0, 0, 0, 0);
+    font-size: 26px;
+    padding: 5px 50px;
+    border-radius: 5px;
+    transition: .3s border ease;
+}
+
+.yes_button{
+    color: rgb(0, 140, 0);
+    border: 1px solid rgba(0, 211, 0, 0);
+}
+
+.yes_button:hover {
+    border: 1px solid rgb(0, 140, 0);
+}
+
+.no_button{
+    color: rgb(140, 0, 0);
+    border: 1px solid rgba(211, 0, 0, 0);
+}
+
+.no_button:hover {
+    border: 1px solid rgb(140, 0, 0);
+}
+
 .navbar-collapse.in {
      overflow-y: initial;
 }
 
 @media screen and (max-width: 400px) {
+    .yes_no{
+        margin: 0 auto;
+    }
+
+    .bton{
+        font-size: 20px;
+        padding: 5px 30px;
+    }
+
     .ul {
         float: left;
         display: flex;

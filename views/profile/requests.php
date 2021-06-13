@@ -56,7 +56,9 @@ ProfileAsset::register($this);
                         </div>
                         <? if ($value['allow']): ?>
                             <div class="status_but">
-                                <label data-toggle="modal" data-target="#accept_modal">Принять</label>
+                                <label data-toggle="modal" data-target="#accept_modal">
+                                    <?=($value['type_id'] == 1)?'Опубликовать':'Принять' ?>
+                                </label>
                                 <? if ($value['type_id'] == 1): ?>
                                     <?= Html::a('Редактировать', ['edit-request', 'id' => $value['id']]) ?>
                                 <? else: ?>
@@ -108,7 +110,7 @@ ProfileAsset::register($this);
 
     <? $modal = Modal::begin([
         'id' => 'accept_modal',
-        'header' => '<h2>Принять заявку?</h2>',
+        'header' => '<h2>Опубликовать?</h2>',
     ]); ?>
     <div class="accept_window">
         <?php $form = ActiveForm::begin(['id' => 'accept_form', 'action' => '/profile/accept-request']); ?>
@@ -124,8 +126,8 @@ ProfileAsset::register($this);
         <?= $form->field($model_accept, 'id')->hiddenInput(['class' => 'hidden_id'])->label(false) ?>
         <?php ActiveForm::end(); ?>
         <input id="status_type" type="hidden" value="">
-        <a id="accept_yes" class="yes"><input type="hidden" value="">Принять</a>
-        <label for="accept" class="no" data-dismiss="modal">Отмена</label>
+        <a id="accept_yes" class="yes"><input type="hidden" value="">Да</a>
+        <label for="accept" class="no" data-dismiss="modal">Нет</label>
     </div>
     <?php $modal->end(); ?>
 

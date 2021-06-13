@@ -5,7 +5,7 @@
 /* @var $content string */
 
 use app\widgets\Alert;
-use yii\helpers\Html;
+use yii\bootstrap\Modal;use yii\helpers\Html;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\web\View;
@@ -79,29 +79,26 @@ AppAsset::register($this);
             ];
         }
     }
-    $items[] = Yii::$app->user->isGuest
-        ? (['label' => 'Авторизация', 'url' => ['/main/login']])
-        : (Yii::$app->user->identity->isAvailable('request_in_work')
-            ? ['label' => Yii::$app->user->identity->username,
-                'items' => [
-                    ['label' => 'Профиль', 'url' => ['/profile']],
-                    ['label' => 'Ваши заявки', 'url' => ['/profile/requests']],
-                    ['label' => 'Заявки в работе', 'url' => ['/profile/request-in-work']]
-                ],
-                'options' => [
-                    'class' => 'drop-list',
-                ],
-            ]
-            : ['label' => Yii::$app->user->identity->username,
-                'items' => [
-                    ['label' => 'Профиль', 'url' => ['/profile']],
-                    ['label' => 'Ваши заявки', 'url' => ['/profile/requests']],
-                ],
-                'options' => [
-                    'class' => 'drop-list',
-                ]
-            ]
-        );
+
+    if (Yii::$app->user->isGuest) {
+        $items[] = ['label' => 'Авторизация', 'url' => ['/main/login']];
+    } else {
+        $inner_items = [];
+        $inner_items[] = ['label' => 'Профиль', 'url' => ['/profile/index']];
+        $inner_items[] = ['label' => 'Ваши заявки', 'url' => ['/profile/requests']];
+        if (Yii::$app->user->identity->isAvailable('request_in_work')) {
+            $inner_items[] = ['label' => 'Заявки в работе', 'url' => ['/profile/request-in-work']];
+        }
+        $inner_items[] = ('<li><a data-toggle="modal" data-target="#exit-modal">Выход</a></li>');
+        $items[] = [
+            'label' => Yii::$app->user->identity->username,
+            'items' => $inner_items,
+            'options' => [
+                'class' => 'drop-list',
+            ],
+        ];
+    }
+
     echo Nav::widget([
         'options' => ['class' => 'ul'],
         'items' => $items,
@@ -114,7 +111,17 @@ AppAsset::register($this);
     ]) ?>
     <?= Alert::widget() ?>
     <?= $content ?>
-
+    <? $modal = Modal::begin([
+        'id' => 'exit-modal',
+        'header' => '<h2>Вы точно хотите выйти?</h2>',
+    ]); ?>
+    <div class="yes_no">
+    <?= Html::beginForm(['/main/logout'], 'post') ?>
+    <?= Html::submitButton('Да', ['class' => 'yes_button bton']) ?>
+    <?= Html::endForm() ?>
+    <button class="no_button bton" data-dismiss="modal">Нет</button>
+    <?php $modal->end(); ?>
+    </div>
 </div>
 
 <footer>

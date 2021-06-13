@@ -54,7 +54,7 @@ ProfileAsset::register($this);
                         </div>
                         <? if ($value['allow']): ?>
                             <div class="status_but">
-                                <label data-toggle="modal" data-target="#accept_modal"><?=$value['allow_button_title']?></label>
+                                <label class="allow_button" data-toggle="modal" data-target="#accept_modal"><?=$value['allow_button_title']?></label>
                                 <label data-toggle="modal" data-target="#reject_modal">Отменить</label>
                             </div>
                         <? endif; ?>
@@ -118,7 +118,7 @@ ProfileAsset::register($this);
         ?>
         <?php ActiveForm::end(); ?>
         <input id="status_type" type="hidden" value="">
-        <textarea id="comment_accept" placeholder="Введите примичание"></textarea>
+        <textarea id="comment_accept" placeholder="Введите примечание"></textarea>
         <a id="accept_yes" class="yes"><input type="hidden" value="">Принять</a>
         <label class="no" data-dismiss="modal">Отмена</label>
     </div>
@@ -129,7 +129,7 @@ ProfileAsset::register($this);
         'header' => '<h2>Отменить заявку?</h2>',
     ]); ?>
     <div class="reject_window">
-        <textarea id="comment_reject" placeholder="Введите примичание"></textarea>
+        <textarea id="comment_reject" placeholder="Введите примечание"></textarea>
         <input type="checkbox" id="crt"><label for="crt">Изменить критерии заявки?</label>
         <select id="crit_select" multiple disabled>
             <? foreach ($all_criteria as $key => $item): ?>
