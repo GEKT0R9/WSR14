@@ -1,7 +1,6 @@
 $(document).ready(function () {
 
     $('.del_window .yes').click(function () {
-        $('.del_window .yes').disable();
         $.post(
             '/profile/delete-request',
             {id: $($(this).children()[0]).val()},
@@ -9,7 +8,6 @@ $(document).ready(function () {
                 location.reload();
             }
         );
-        $('.del_window .yes').enable();
     })
 
     $('.problem').click(function () {
